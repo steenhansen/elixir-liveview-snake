@@ -1,0 +1,15 @@
+<svg viewBox="0 0 100 100" width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+   <!-- <rect fill="blue" x="1" y="1" width="98" height="98" />  -->
+
+  <mask id="myMask">
+    <rect fill="white" x="0" y="0" width="100" height="100" />
+    <text style=" font-size: 108px; font-family:'Arial';" font-weight="bold" x="14" y="88" fill="black"  >N</text>
+     
+  </mask>
+
+
+
+
+    <rect fill="white" x="0" y="0" width="100" height="100" mask="url(#myMask)"  />
+
+</svg>
