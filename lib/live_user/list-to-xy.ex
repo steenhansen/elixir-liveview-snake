@@ -1,6 +1,7 @@
 defmodule ListToXy do
  
   def makeARow(players_matrix, x_range, the_row) do
+      #   dbg({"77", players_matrix})
     for x <- 0..x_range, into: %{} do
       color = players_matrix[{x, the_row}]
       {x, color}
@@ -22,6 +23,7 @@ defmodule ListToXy do
 
        """
   def makeAllRows(players_matrix, x_range, y_range) do
+       #  dbg({"66", players_matrix})
     for y <- 0..y_range, into: %{} do
       the_row = makeARow(players_matrix, x_range, y)
       {y, the_row}

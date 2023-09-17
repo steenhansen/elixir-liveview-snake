@@ -28,51 +28,73 @@ defmodule CssVars do
         .xxx-n {
           background-color : rgba(var(--the-player-colors), 1) 
         }
-          #da_0 {
-          position: absolute;
-          opacity: var(--jump_0_opacity);
-        }
-          #da_1 {
-          position: absolute;
-          opacity: var(--jump_1_opacity);
-        }
-        #da_2 {
-          position: absolute;
-          opacity: var(--jump_2_opacity);
-        }
-          #da_3 {
-          position: absolute;
-          opacity: var(--jump_3_opacity);
-        }     
-        #da_4 {
-          position: absolute;
-          opacity: var(--jump_4_opacity);
-        }
-        #da_5 {
-          position: absolute;
-          opacity: var(--jump_5_opacity);
-        }
-        #da_6 {
-          position: absolute;
-          opacity: var(--jump_6_opacity);
-        }
-        #da_7 {
-          position: absolute;
-          opacity: var(--jump_7_opacity);
-        }
-        #da_8 {
-          position: absolute;
-          opacity: var(--jump_8_opacity);
-        }
-        #da_XX {
+        #jump-0 {
           position: absolute;
           opacity: 0;
         }
-
-          ._tile {
+        #jump-1 {
+          position: absolute;
+          opacity: var(--jump_0_opacity);
+        }
+          #jump-2 {
+          position: absolute;
+          opacity: var(--jump_1_opacity);
+        }
+        #jump-3 {
+          position: absolute;
+          opacity: var(--jump_2_opacity);
+        }
+          #jump-4 {
+          position: absolute;
+          opacity: var(--jump_3_opacity);
+        }     
+        #jump-5 {
+          position: absolute;
+          opacity: var(--jump_4_opacity);
+        }
+        #jump-6 {
+          position: absolute;
+          opacity: var(--jump_5_opacity);
+        }
+        #jump-7 {
+          position: absolute;
+          opacity: var(--jump_6_opacity);
+        }
+        #jump-8 {
+          position: absolute;
+          opacity: var(--jump_7_opacity);
+        }
+        #jump-9 {
+          position: absolute;
+          opacity: var(--jump_8_opacity);
+        }
+        div{
+          float:left;
+        }
+        img{
             width: <%= @tile_size %>px;
             height: <%= @tile_size %>px;
-            float: left;
+             float: left;
+            position: relative;
+               visibility: visible;
+        }
+
+
+
+
+        .not-jumping {
+          visibility: hidden;
+        }
+
+        #p_1_0 {position: absolute; scale: 1.5; z-index:12; }
+        #p_1_1 {position: absolute; scale: 1.5; z-index:12; }
+        #p_1_2 {position: absolute; scale: 1.5; z-index:12; }
+        #p_1_3 {position: absolute; scale: 1.5; z-index:12; }
+
+
+          ._tile {
+            <%!-- float: left;
+            position: relative; --%>
           }
 
           #_board {
@@ -88,9 +110,10 @@ defmodule CssVars do
           ._row {
             width:  <%= @width_px %>px;
             height: <%= @row_height %>px;
-            overflow: hidden;
+            <%!-- overflow: hidden; --%>
             z-index: 2;
-            position: relative
+            position: relative;
+         /*   overflow: hidden;       */         /*     screws up when small verically */
 
           }
           @keyframes rotation {
@@ -98,7 +121,7 @@ defmodule CssVars do
             to { transform: rotate(359deg); }
           }
  
-          #_rotator0 {
+          #rotator_nesw {
              animation: rotation  <%= @live_rotate %>s infinite linear;
 
             transform: rotate(var(--rotator-deg));
@@ -114,7 +137,7 @@ defmodule CssVars do
             background-image: url('/images/compass-nesw-grid.svg'); 
           }
 
-          #_rotator {
+          #rotator_squares {
               animation: rotation  <%= @live_rotate %>s infinite linear;
             <%!-- transform: rotate(var(--rotator-deg)); --%>
             transform-origin: center;
@@ -122,12 +145,12 @@ defmodule CssVars do
             height: <%= @height_px %>px;
             background-position: center;
             overflow: hidden;
-            z-index: 3;
+            z-index: 11;
             position: absolute;
 
               }
 
-          #_rotator2 {
+          #rotator_hash {
                     animation: rotation  <%= @live_rotate %>s infinite linear;
             <%!-- transform: rotate(var(--rotator-deg)); --%>
             transform-origin: center;
@@ -141,15 +164,20 @@ defmodule CssVars do
             background-image: url('/images/395_v_h_grey.png');
           }
 
+          #nesw{
+            clear:both
+          }
 
           .flex-grid {
             display: flex;
               align-items: center;
             justify-content: center;
+            float:none;
           }
           .flex-col {
             flex: 1;
             text-align: center;
+            float:none
           }
 
 
@@ -165,6 +193,16 @@ defmodule CssVars do
           }
 
           
+
+        #p_1_0 {position: absolute; scale: 1.5; z-index:12; }
+        #p_1_1 {position: absolute; scale: 1.5; z-index:12; }
+        #p_1_2 {position: absolute; scale: 1.5; z-index:12; }
+        #p_1_3 {position: absolute; scale: 1.5; z-index:12; }
+
+
+
+
+
         </style>
 
 

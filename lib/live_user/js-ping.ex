@@ -43,10 +43,26 @@ defmodule JsPing do
       <div id="js_ping.ex">
 
         <script>
+
+    function livePingTime(){
+
+        window.live_hooks = this;
+        server_ms_time = serverMsFromClient();
+        this.pushEvent("update-ping", server_ms_time);
+    }
+
+
+
             function serverMsFromClient() {
               ping_elem = document.getElementById("ping-box-ms");
               ping_ms = ping_elem.value;
-              return { ping_server_ms: ping_ms };
+      const path_name = location.pathname
+      const path_parts = path_name.split('/');
+    
+      const game_name = path_parts[1]
+      const user_name = path_parts[2]
+console.info("xxxx", game_name, "**", user_name )
+              return { ping_server_ms: ping_ms, game_name: game_name, user_name: user_name };
           }
         </script>
 

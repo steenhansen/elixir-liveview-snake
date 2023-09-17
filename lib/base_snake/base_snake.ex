@@ -12,7 +12,9 @@ defmodule SnakeSlither do
             snake_rump: {3, 4},
             snake_cleanup: true,
             snake_id: "1",
-            snake_dead: false
+            snake_dead: false,
+            jump_count: 0,
+            snake_penultimate: {7.7}
 end
 
 defmodule Snakeplayer do
@@ -29,15 +31,17 @@ defmodule BaseSnake do
           do: init_pixel
   end
 
-  def moveSnake(snake_id, pid_board, a_snake, head_direction) do
+  def moveSnake(snake_id, pid_board, a_snake, head_direction, jump_count) do
+    dbg({"A moveSnake is a list", a_snake.snake_path})
+
     if a_snake.dead_stop do
       a_snake
     else
       [x_range, y_range] = GameBoard.board_size(pid_board)
-      [tailpiece | new_tail] = a_snake.snake_path
-      new_last = hd(new_tail)
-      erasing_tail = new_last != tailpiece
+      [new_rump | new_body] = a_snake.snake_path
+      erasing_tail = new_rump != new_body
       {x_front, y_front} = a_snake.front_snake
+
       # new_dir =
       #       case a_snake.snake_direction do
       #         "up" -> Enum.random(["right", "up", "left"])
@@ -53,16 +57,20 @@ defmodule BaseSnake do
           "left" -> BaseSnake.moveLeft(x_front, y_front, x_range)
         end
 
-      new_snake_path = new_tail ++ [new_front]
+      new_snake_path = new_body ++ [new_front]
+      penultimate_square = Enum.at(new_snake_path, 0)
 
       a_slither = %SnakeSlither{
         front_snake: new_front,
         snake_id: snake_id,
-        snake_rump: new_last,
+        snake_rump: new_rump,
         snake_cleanup: erasing_tail,
-        snake_dead: false
+        snake_dead: false,
+        jump_count: jump_count,
+        snake_penultimate: penultimate_square
       }
 
+      dbg({"A PENUL", a_slither.snake_penultimate})
       ran_into = GameBoard.snake_move(pid_board, a_slither)
 
       if ran_into == "no_crash" do
@@ -128,7 +136,16 @@ defmodule BaseSnake do
 
         %{ {0,0} => 10, {1,0} => 11, {2,0} => 12, {3,3} => 20, {3,4} => 21, {3,5} => 22  } 
        """
-  def snakeColors(players_snakes, player_colors, snake_fronts, snake_rumps, killed_bys) do
+  def snakeColors(
+        players_snakes,
+        player_colors,
+        snake_fronts,
+        snake_rumps,
+        killed_bys,
+        snake_penultimates
+      ) do
+ dbg({" 2 penultimate", snake_penultimates})
+
     snake_segments =
       players_snakes
       |> Enum.map(fn {user_name, xy_coords} ->
@@ -136,7 +153,9 @@ defmodule BaseSnake do
         snake_front = snake_fronts[user_name]
         snake_rump = snake_rumps[user_name]
         killed_by = Map.get(killed_bys, user_name, 0)
-        colorASnake16(snake_color, xy_coords, snake_front, snake_rump, killed_by)
+        the_penulitmate = snake_penultimates[user_name]
+
+        colorASnake16(snake_color, xy_coords, snake_front, snake_rump, killed_by, the_penulitmate)
       end)
 
     _merge_snakes_ =
@@ -167,18 +186,28 @@ defmodule BaseSnake do
   @doc since: """
          BaseSnake.colorASnake(1, MapSet.new([ {0,0}, {1,0}, {2,0}]), {0,0}, {2,0})
          {{0, 0}, 10}, {{1, 0}, 11}, {{2, 0}, 12}}
+
+       add class !
+
+
        """
-  def colorASnake16(player_color, xy_coords, snake_front, snake_rump, killed_by) do
+  def colorASnake16(player_color, xy_coords, snake_front, snake_rump, killed_by, the_penulitmate) do
     {head_color, midl_color, tail_color} = possibleColors(player_color, killed_by)
+    dbg({" 1 penultimate", the_penulitmate, snake_front, snake_rump})
+
     _colored_snake =
       xy_coords
       |> Enum.map(fn xy_coord ->
         case xy_coord do
-          ^snake_front -> {xy_coord, head_color}
+          ^snake_front -> {xy_coord, head_color + 200}
+          ^the_penultimate -> {xy_coord, midl_color + 100}
           _ -> {xy_coord, midl_color}
         end
       end)
       |> Map.new()
       |> Map.put(snake_rump, tail_color)
+
+    # dbg({"11", _colored_snake})
+    _colored_snake
   end
 end

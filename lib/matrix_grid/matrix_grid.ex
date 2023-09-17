@@ -28,23 +28,41 @@ defmodule MatrixGrid do
          # %{ {0,0} => 0, {0,1} => 0, {1,0} => 11, {1,1}=> 1,       
          #    {2,0} => 22, {2,1} => 1,   {3,0} => 0, {3,1}=> 0      } 
        """
+  def color_and_jump(segment_color) do
+    if segment_color>200 do 
+      { segment_color-200 , 2}
+    else 
+      if segment_color>100 do
+        { segment_color-100 , 1}
+      else
+        { segment_color, 0}
+      end
+    end
+  end
+
   def snakesToMatrix(walled_matrix, snakes_pixels) do
+    dbg(snakes_pixels)
     snake_segments =
       snakes_pixels
       |> Enum.map(fn a_segment ->
         {xy_coord, segment_color} = a_segment
-        {xy_coord, segment_color}
+        {the_color, the_jump} = color_and_jump(segment_color)
+        {xy_coord, {the_color, the_jump}}
       end)
       |> Map.new()
+  
+   # dbg({"22", snake_segments})
 
     snaked_matrix =
       walled_matrix
       |> Enum.map(fn {xy_coord, color_0_1} ->
         if Map.has_key?(snake_segments, xy_coord) do
-          snake_color = snake_segments[xy_coord]
-          {xy_coord, snake_color}
+          {the_color, the_jump} = snake_segments[xy_coord]
+    #      dbg({"22.22", the_jump})
+    class_jump = "high-" <> Integer.to_string(the_jump)
+          {xy_coord, {the_color, class_jump}}
         else
-          {xy_coord, color_0_1}
+          {xy_coord, {color_0_1, 0}}
         end
       end)
       |> Map.new()

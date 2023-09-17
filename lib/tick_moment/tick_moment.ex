@@ -9,23 +9,47 @@ defmodule TickMoment do
     GenServer.start_link(TickMoment, starter_person)
   end
 
-  def init(_starter_person) do
-    participants_live = CollectParticipants.get_participants()
+  def robot_snakes(num_robots, pid_board) do
+    if num_robots < 1 do
+      %{}
+    else
+      comp_snakes =
+        for comp_number <- 1..num_robots, into: %{} do
+          {x_start, y_start, dir_start} = TheConsts.start_coord_dir()[comp_number]
+          straight_start = List.duplicate(dir_start, TheConsts.c_start_follow())
+
+          comp_snake = %StartComputer{
+            snake_number: comp_number,
+            snake_directions: straight_start,
+            snake_x: x_start,
+            snake_y: y_start
+          }
+
+          {:ok, pid_snake} = ComputerSnake.start_link(comp_snake)
+          GameBoard.place_robot(pid_board, comp_number)
+          {comp_number, %{pid_snake: pid_snake}}
+        end
+    end
+  end
+
+  def init(game_moniker) do
+    participants_live = CollectParticipants.get_participants(game_moniker)
 
     {:ok, pid_board} =
       GameBoard.start_link(%StartBoard{
         x_range: TheConsts.c_board_hor(),
         y_range: TheConsts.c_board_hor(),
-        wall_plots: TheConsts. c_wall_plots   #[{0, 0}, {2, 2}]
+        wall_plots: TheConsts.c_wall_plots()
       })
 
-    #  people_snakes2 =     for {c, counter} <- Enum.with_index(participants_live), do {counter, c}
+    num_robots = TheConsts.c_num_computer()
+    comp_snakes = robot_snakes(num_robots, pid_board)
 
     people_snakes =
       participants_live
       |> Enum.with_index(0)
       |> Enum.map(fn {pid_live__person_name, color_index} ->
-        {{game_moniker, person_name}, pid_live} = pid_live__person_name
+        {person_name, pid_live} = pid_live__person_name
         {x_start, y_start, dir_start} = TheConsts.start_coord_dir()[color_index]
 
         person_snake = %StartPerson{
@@ -42,25 +66,6 @@ defmodule TickMoment do
       end)
       |> Map.new()
 
-    comp_snakes =
-      for comp_number <- 1..TheConsts.c_num_computer, into: %{} do
-        comp_snake = %StartComputer{
-          snake_number: comp_number,
-          # snake_routes
-          snake_directions: [
-            "left",
-            "left",
-            "left"
-          ],
-          snake_x: 3,
-          snake_y: 3
-        }
-
-        {:ok, pid_snake} = ComputerSnake.start_link(comp_snake)
-        GameBoard.place_robot(pid_board, comp_number)
-        {comp_number, %{pid_snake: pid_snake}}
-      end
-
     started_moment = %{
       pid_board: pid_board,
       people_snakes: people_snakes,
@@ -74,27 +79,31 @@ defmodule TickMoment do
   def handle_info({:update_tick}, tick_moment) do
     pid_board = tick_moment.pid_board
     people_snakes = tick_moment.people_snakes
-    comp_snakes = tick_moment.comp_snakes
+       comp_snakes = tick_moment.comp_snakes
     players_matrix = GameBoard.snake_matrix(pid_board)
+    #  dbg({"44", players_matrix})
     [x_range, y_range] = GameBoard.board_size(pid_board)
 
     for {_robot_number, pid_only_snake} <- comp_snakes, into: [] do
       pid_snake = pid_only_snake.pid_snake
-     computer_front= ComputerSnake.slither_move(pid_snake, pid_board)
+      _computer_front = ComputerSnake.slither_move(pid_snake, pid_board)
     end
+
     pid_tick = self()
+
     max_pings =
       for {_person_name, pid_live_and_pid_snake} <- people_snakes, into: [] do
         pid_snake = pid_live_and_pid_snake.pid_snake
         pid_live = pid_live_and_pid_snake.pid_live
-        human_front = HumanSnake.slither_move(pid_snake, pid_board)
+        _front_snake = HumanSnake.slither_move(pid_snake, pid_board)
         LiveUser.send_board(pid_live, pid_board, pid_tick, players_matrix, x_range, y_range)
       end
 
-     players_alive = GameBoard.players_alive(pid_board)
-     if players_alive ==1 do
-      dbg(players_alive)
-     end
+    players_alive = GameBoard.players_alive(pid_board)
+
+    if players_alive == 1 do
+    end
+
     # ascii_board = GameBoard.ascii_print(pid_board, players_matrix)
     # dg(ascii_board)
 
@@ -106,7 +115,7 @@ defmodule TickMoment do
       max_game_ping: Enum.max(max_pings)
     }
 
- Process.send_after(pid_tick, {:update_tick}, TheConsts.frames_per_sec())
+    Process.send_after(pid_tick, {:update_tick}, TheConsts.frames_per_sec())
     {:noreply, started_moment}
   end
 
@@ -127,6 +136,17 @@ defmodule TickMoment do
     down_snake = Map.get(started_moment.people_snakes, person_name)
     %{pid_snake: pid_snake} = down_snake
     HumanSnake.change_direction(pid_snake, new_dirr)
+    {:noreply, started_moment}
+  end
+
+  def snake_jump(tid, person_name) do
+    GenServer.cast(tid, {:snake_jump, person_name})
+  end
+
+  def handle_cast({:snake_jump, person_name}, started_moment) do
+    down_snake = Map.get(started_moment.people_snakes, person_name)
+    %{pid_snake: pid_snake} = down_snake
+    HumanSnake.jump_over(pid_snake)
     {:noreply, started_moment}
   end
 end

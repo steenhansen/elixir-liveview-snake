@@ -1,16 +1,22 @@
 defmodule TheConsts do
   # constants have 3
 
-  def c_num_computer, do: 1
+  # def c_ ==> computer
+  def c_num_computer, do: 0
+  def c_start_follow, do: 20
+
+  # s=>snake
 
   def c_wall_kill, do: "--wall--killed--"
 
   #   -wall-killed-
 
-  def c_wall_plots, do: [{0, 0}, {23, 11}]
+  def c_wall_plots, do: [{0, 0}, {0, 3}]
 
-  # 13
-  def c_snake_len, do: 13
+  # 13    3 is really 4
+
+  def c_real_snake_len, do: 3
+  def c_snake_len, do: c_real_snake_len() - 1
 
   # TheConsts.c_board_hor
   # do not pass directly, so can change !!!!!!!!!!!  
@@ -20,12 +26,13 @@ defmodule TheConsts do
   # 44
   def c_board_ver, do: 44
 
+  def c_glacial, do: 10000
   def c_slow_super, do: 1000
   def c_slow_12_5_a_sec, do: 80
   def c_med_25_a_sec, do: 40
   def c_fast_50_a_sec, do: 20
 
-  def frames_per_sec, do: c_slow_12_5_a_sec()
+  def frames_per_sec, do: c_slow_super()
 
   def c_head_col_offset, do: 0
   def c_midl_col_offset, do: 1

@@ -5,9 +5,9 @@ defmodule RotateBoard do
   def render(assigns) do
     ~H"""
     <div style="position:relative">
-          <div id="_rotator2"></div>
-          <div id="_rotator0"></div>
-          <.live_component module={MatrixRows} id="matrix-rows"  vv ={@vv}/>
+          <div id="rotator_hash"></div>
+          <div id="rotator_nesw"></div>
+          <.live_component module={MatrixRows} id="matrix-rows"  vv ={@vv}  jump_classes={@jump_classes}/>
         </div>
     """
   end

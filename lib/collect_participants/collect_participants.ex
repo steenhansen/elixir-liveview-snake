@@ -1,6 +1,8 @@
 defmodule CollectParticipants do
   use GenServer
 
+  # alias MultiGameWeb.LiveUser
+
   #  https://www.openmymind.net/Elixir-A-Little-Beyond-The-Basics-Part-8-genservers/
 
   #  https://stackoverflow.com/questions/48876826/using-a-genserver-in-phoenix-the-process-is-not-alive
@@ -10,23 +12,36 @@ defmodule CollectParticipants do
   end
 
   def init(_) do
-    no_players = Map.new()
-    {:ok, no_players}
+    no_games = Map.new()
+    {:ok, no_games}
   end
 
-  def handle_cast({:add_participant, game_moniker, the_name, pid_player}, old_waiting) do
-    monikers = {game_moniker, the_name}
-    new_waiting = Map.put(old_waiting, monikers, pid_player)
+  def handle_call({:get_participants, game_moniker}, _from_, all_games) do
+    players_in_game = all_games[game_moniker]
 
-    still_alive =
+    this_game =
       Map.filter(
-        new_waiting,
-        fn {_monikers, live_id} ->
-          Process.alive?(live_id)
+        players_in_game,
+        fn {user_name, pid_live} ->
+          Process.alive?(pid_live)
         end
       )
 
-    {:noreply, still_alive}
+    {:reply, this_game, all_games}
+  end
+
+  def get_participants(game_moniker) do
+    GenServer.call(__MODULE__, {:get_participants, game_moniker})
+  end
+
+  def handle_cast({:add_participant, game_moniker, user_name, new_pid_live}, old_waiting) do
+    ensure_game = Map.put_new(old_waiting, game_moniker, %{})
+
+    games_users = ensure_game[game_moniker]
+
+    added_user = Map.put(games_users, user_name, new_pid_live)
+    new_waiting = Map.put(old_waiting, game_moniker, added_user)
+    {:noreply, new_waiting}
   end
 
   def handle_cast({:clear_participants}, _old_waiting) do
@@ -34,19 +49,11 @@ defmodule CollectParticipants do
     {:noreply, no_players}
   end
 
-  def add_participant(game_moniker, the_name, pid_player) do
-    GenServer.cast(__MODULE__, {:add_participant, game_moniker, the_name, pid_player})
+  def add_participant(game_moniker, user_name, pid_live) do
+    GenServer.cast(__MODULE__, {:add_participant, game_moniker, user_name, pid_live})
   end
 
   def clear_participants() do
     GenServer.cast(__MODULE__, {:clear_participants})
-  end
-
-  def handle_call({:get_participants}, _from_, waiting_players) do
-    {:reply, waiting_players, waiting_players}
-  end
-
-  def get_participants() do
-    GenServer.call(__MODULE__, {:get_participants})
   end
 end

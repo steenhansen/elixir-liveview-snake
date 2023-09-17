@@ -20,6 +20,8 @@ defmodule MultiGame.Application do
       # Start a worker by calling: MultiGame.Worker.start_link(arg)
       # {MultiGame.Worker, arg}
       CollectParticipants
+      # {DynamicSupervisor, strategy: :one_for_one, name: MyApp.DynamicSupervisor}
+
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

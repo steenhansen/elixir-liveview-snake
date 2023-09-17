@@ -69,14 +69,13 @@ defmodule ComputerSnake do
 
   #
 
-  def slither_move(pid_snake, pid_board) do
-    GenServer.call(pid_snake, {:slither_move, pid_board})
-  end
+
 
   def handle_call({:slither_move, pid_board}, _from, computer_snake) do
     [head_direction | smaller_directions] = computer_snake.snake_directions
     snake_id = Integer.to_string(computer_snake.snake_number)
-    moved_snake = BaseSnake.moveSnake(snake_id, pid_board, computer_snake, head_direction)
+    jump_count_0 = 0
+    moved_snake = BaseSnake.moveSnake(snake_id, pid_board, computer_snake, head_direction,jump_count_0)
 
     if moved_snake.dead_stop do
       {:reply, moved_snake.front_snake, moved_snake}
@@ -114,4 +113,10 @@ defmodule ComputerSnake do
       end
     end
   end
+
+    def slither_move(pid_snake, pid_board) do
+    GenServer.call(pid_snake, {:slither_move, pid_board})
+  end
+
+  
 end
