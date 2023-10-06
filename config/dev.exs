@@ -23,7 +23,7 @@ config :multi_game, MultiGameWeb.Endpoint,
 
 # check_origin: false, 
 
-  check_origin: ["https://https://elixir-snake.gigalixirapp.com"],
+  check_origin: ["https://elixir-snake.gigalixirapp.com"],
 
 
   
