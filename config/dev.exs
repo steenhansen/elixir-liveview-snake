@@ -4,7 +4,11 @@ import Config
 config :multi_game, MultiGame.Repo,
   username: "postgres",
   password: "postgres",
-  hostname: "localhost",
+  
+  #hostname: "localhost",
+  hostname: "elixir-snake.gigalixirapp.com",
+
+
   database: "multi_game_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
