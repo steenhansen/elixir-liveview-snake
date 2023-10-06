@@ -4,11 +4,9 @@ import Config
 config :multi_game, MultiGame.Repo,
   username: "postgres",
   password: "postgres",
-  
-  #hostname: "localhost",
+
+  # hostname: "localhost",
   hostname: "elixir-snake.gigalixirapp.com",
-
-
   database: "multi_game_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
@@ -23,15 +21,15 @@ config :multi_game, MultiGame.Repo,
 config :multi_game, MultiGameWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
-#  http: [ip: {127, 0, 0, 1}, port: 4000],
-  http: [ip: {0, 0, 0, 0}, port: 4000],
-
-# check_origin: false, 
-
-  check_origin: ["https://elixir-snake.gigalixirapp.com"],
 
 
-  
+  http: [ip: {127, 0, 0, 1}, port: 4000],
+  # http: [ip: {0, 0, 0, 0}, port: 4000],
+
+  check_origin: false,
+
+  #  check_origin: ["https://elixir-snake.gigalixirapp.com"],
+
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "w/7bFwMGu3Ma4PEW0ko+EMcMMENJqHz9HuVk5WknjNKTwe6wfaYp/MXbeq+tlNrP",
