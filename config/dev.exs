@@ -20,7 +20,13 @@ config :multi_game, MultiGameWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [ip: {127, 0, 0, 1}, port: 4000],
-  check_origin: false,
+
+# check_origin: false, 
+
+  check_origin: ["https://https://elixir-snake.gigalixirapp.com"],
+
+
+  
   code_reloader: true,
   debug_errors: true,
   secret_key_base: "w/7bFwMGu3Ma4PEW0ko+EMcMMENJqHz9HuVk5WknjNKTwe6wfaYp/MXbeq+tlNrP",
