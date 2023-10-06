@@ -10,7 +10,7 @@ This repo was built using the
 
 Create your gigalixir application:
 ```
-YES:: gigalixir create -n snake_game
+YES:: gigalixir create -n elixir-snake
 
 NO::: APP_NAME=$(gigalixir create)
 ```
