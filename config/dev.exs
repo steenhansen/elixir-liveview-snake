@@ -1,5 +1,15 @@
 import Config
 
+# Configure your database
+config :multi_game, MultiGame.Repo,
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost",
+  database: "multi_game_dev",
+  stacktrace: true,
+  show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
@@ -13,7 +23,7 @@ config :multi_game, MultiGameWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "64c6k4eV9u2oFGlTq6ws1KC5CEkiMOpm3GvGcl2tt5dZ8pPpDwkUKPNirEerOoR2",
+  secret_key_base: "w/7bFwMGu3Ma4PEW0ko+EMcMMENJqHz9HuVk5WknjNKTwe6wfaYp/MXbeq+tlNrP",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]}
@@ -56,12 +66,7 @@ config :multi_game, MultiGameWeb.Endpoint,
 config :multi_game, dev_routes: true
 
 # Do not include metadata nor timestamps in development logs
-
-
-# below logs every js event call back qbert
-#config :logger, :console, format: "[$level] $message\n"
-
-config :logger, :console, level: :info, format: "[$level] $message\n"
+config :logger, :console, format: "[$level] $message\n"
 
 # Set a higher stacktrace during development. Avoid configuring such
 # in production as building large stacktraces may be expensive.

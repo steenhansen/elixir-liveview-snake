@@ -7,6 +7,9 @@
 # General application configuration
 import Config
 
+config :multi_game,
+  ecto_repos: [MultiGame.Repo]
+
 # Configures the endpoint
 config :multi_game, MultiGameWeb.Endpoint,
   url: [host: "localhost"],
@@ -15,7 +18,7 @@ config :multi_game, MultiGameWeb.Endpoint,
     layout: false
   ],
   pubsub_server: MultiGame.PubSub,
-  live_view: [signing_salt: "n+gBfSUd"]
+  live_view: [signing_salt: "58UDmctC"]
 
 # Configures the mailer
 #
