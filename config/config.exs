@@ -13,7 +13,7 @@ config :multi_game,
 # Configures the endpoint
 config :multi_game, MultiGameWeb.Endpoint,
   #url: [host: "localhost"],
-  url: [host: "elixir-snake.gigalixirapp.com", port: 443, scheme: "https"]
+  url: [host: "elixir-snake.gigalixirapp.com", port: 443, scheme: "https"],
   render_errors: [
     formats: [html: MultiGameWeb.ErrorHTML, json: MultiGameWeb.ErrorJSON],
     layout: false
