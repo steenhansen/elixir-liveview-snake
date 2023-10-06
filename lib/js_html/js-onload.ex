@@ -1,4 +1,4 @@
-defmodule OnLoad do
+defmodule JsOnload do
   use MultiGameWeb, :live_component
 
   def render(assigns) do
@@ -9,44 +9,37 @@ defmodule OnLoad do
             phoenix_hooks = window.live_hooks;
             key_code = e.keyCode;
             if (key_code == 37 ) { 
-              phoenix_hooks.pushEvent("key-west","key_west");
+              e.preventDefault();                   
+              phoenix_hooks.pushEvent("key-west");
             } else if (key_code == 38 ) { 
-              phoenix_hooks.pushEvent("key-north","key_north");
+              e.preventDefault();                   
+              phoenix_hooks.pushEvent("key-north");
             } else if (key_code == 39 ) { 
-              phoenix_hooks.pushEvent("key-east","key_east");
+              e.preventDefault();                   
+              phoenix_hooks.pushEvent("key-east");
             } else if (key_code == 40 ) { 
-              phoenix_hooks.pushEvent("key-south","key_south");
+              e.preventDefault();                   
+              phoenix_hooks.pushEvent("key-south");
             } else if (key_code == 32 ) { 
-              phoenix_hooks.pushEvent("key-jump","key_jump");
+              e.preventDefault();                   
+              phoenix_hooks.pushEvent("key-jump");
               }
           }
+
           window.addEventListener('keydown', eventHandler, false);
-        } 
+        }
 
-        function snakeJump(key_jump) {
-          const path_name = location.pathname;
-          const path_parts = path_name.split('/');
-          const user_name = path_parts[1];
-          window.live_hooks.pushEvent(key_jump, user_name);
-        } 
-
-        function headingChange(the_dir) {
-          const path_name = location.pathname;
-          const path_parts = path_name.split('/');
-          const user_name = path_parts[1];
-          window.live_hooks.pushEvent(the_dir, user_name);
-        } 
-
+        
         function flash(target) {
           target.style.backgroundColor = "rgba(var(--the-player-colors), .1)";
         } 
 
-        function enterM(bid) {
+        function enterNesw(bid) {
           button = document.getElementById(bid);
-          button.style.backgroundColor = "#808080";
+          button.style.backgroundColor = "#000102";
         }
 
-        function leaveM(bid) {
+        function leaveNesw(bid) {
           button = document.getElementById(bid);
           button.style.backgroundColor = "";
         }

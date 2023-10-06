@@ -28,65 +28,38 @@ defmodule MatrixGrid do
          # %{ {0,0} => 0, {0,1} => 0, {1,0} => 11, {1,1}=> 1,       
          #    {2,0} => 22, {2,1} => 1,   {3,0} => 0, {3,1}=> 0      } 
        """
-  def color_and_jump(segment_color) do
-    if segment_color>200 do 
-      { segment_color-200 , 2}
-    else 
-      if segment_color>100 do
-        { segment_color-100 , 1}
-      else
-        { segment_color, 0}
-      end
-    end
-  end
-
-  def snakesToMatrix(walled_matrix, snakes_pixels) do
-    dbg(snakes_pixels)
-    snake_segments =
-      snakes_pixels
-      |> Enum.map(fn a_segment ->
-        {xy_coord, segment_color} = a_segment
-        {the_color, the_jump} = color_and_jump(segment_color)
-        {xy_coord, {the_color, the_jump}}
-      end)
-      |> Map.new()
-  
-   # dbg({"22", snake_segments})
-
-    snaked_matrix =
-      walled_matrix
+  def snakesToMatrix(m_walled_matrix, m_snakes_pixels) do
+    m_snaked_matrix =
+      m_walled_matrix
       |> Enum.map(fn {xy_coord, color_0_1} ->
-        if Map.has_key?(snake_segments, xy_coord) do
-          {the_color, the_jump} = snake_segments[xy_coord]
-    #      dbg({"22.22", the_jump})
-    class_jump = "high-" <> Integer.to_string(the_jump)
-          {xy_coord, {the_color, class_jump}}
+        if Map.has_key?(m_snakes_pixels, xy_coord) do
+          m_xySvgCss = m_snakes_pixels[xy_coord]
+
+            {xy_coord, m_xySvgCss}
         else
-          {xy_coord, {color_0_1, 0}}
+          m_xySvgCss = %XySvgCss{svg_index: color_0_1, css_jump: "no-jump"}
+          {xy_coord, m_xySvgCss}
         end
       end)
       |> Map.new()
 
-    # end
-
-    snaked_matrix
+    m_snaked_matrix
   end
 
   @doc since: """
-          x_range = 1               #NEW WAY 1 == NEW WAY 2 !!!!!!!!!
-          y_range = 1 
+          width_game = 1               #NEW WAY 1 == NEW WAY 2 !!!!!!!!!
+          height_game = 1 
           all_empty =
-             for x <- 0..x_range,
-                 y <- 0..y_range,
+             for x <- 0..width_game,
+                 y <- 0..height_game,
                  into: Map.new(),
                  do: {{x, y}, 0}
        MapSet.new([{{0, 0}, 0}, {{0, 1}, 0}, {{1, 0}, 0}, {{1, 1}, 0}])
        """
-  # bart
-  def emptyMatrix(x_range, y_range) do
+  def emptyMatrix(width_game, height_game) do
     all_empty =
-      for x <- 0..x_range,
-          y <- 0..y_range,
+      for x <- 0..width_game,
+          y <- 0..height_game,
           into: MapSet.new(),
           do: {x, y}
 
@@ -94,12 +67,12 @@ defmodule MatrixGrid do
   end
 
   @doc since: """
-         wall_plots = MapSet.new([{1, 1}, {2,1}])                               # NEW WAY 3
+         board_walls = MapSet.new([{1, 1}, {2,1}])                               # NEW WAY 3
          empty_matrix = MapSet.new([{0,0}, {1,0}, {2,0}, {3,0},
                            {0,1}, {1,1}, {2,1}, {3,1}      ])
          x = ( empty_matrix
                |> Enum.map(fn (xy_coord)-> 
-                      if MapSet.member?(wall_plots,xy_coord) do
+                      if MapSet.member?(board_walls,xy_coord) do
                         {xy_coord, 1}
                       else 
                         {xy_coord, 0}
@@ -108,12 +81,12 @@ defmodule MatrixGrid do
        %{ {0,0} => 0, {1,0} => 0, {2,0} => 0, {3,0}=> 0,
           {0,1} => 0, {1,1} => 1, {2,1} => 1, {3,1}=> 0      } 
        """
-  # bart
-  def walledMatrix(empty_matrix, wall_plots) do
+
+  def walledMatrix(empty_matrix, board_walls) do
     walled_matrix =
       empty_matrix
       |> Enum.map(fn xy_coord ->
-        if MapSet.member?(wall_plots, xy_coord) do
+        if MapSet.member?(board_walls, xy_coord) do
           {xy_coord, 1}
         else
           {xy_coord, 0}
@@ -126,8 +99,8 @@ defmodule MatrixGrid do
 
   def asciiBoard(players_matrix, current_board) do
     as_lists =
-      for y <- 0..current_board.y_range, into: [] do
-        for x <- 0..current_board.x_range do
+      for y <- 0..current_board.height_game, into: [] do
+        for x <- 0..current_board.width_game do
           players_matrix[y][x]
         end
       end

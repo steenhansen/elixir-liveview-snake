@@ -1,6 +1,6 @@
-# current_ping_ms
+# html_ping
 
-defmodule JsPing do
+defmodule CalcPing do
    use MultiGameWeb, :live_component
 
    def db_start_ms() do
@@ -37,38 +37,4 @@ defmodule JsPing do
   end
 
 
-
-  def render(assigns) do
-    ~H"""
-      <div id="js_ping.ex">
-
-        <script>
-
-    function livePingTime(){
-
-        window.live_hooks = this;
-        server_ms_time = serverMsFromClient();
-        this.pushEvent("update-ping", server_ms_time);
-    }
-
-
-
-            function serverMsFromClient() {
-              ping_elem = document.getElementById("ping-box-ms");
-              ping_ms = ping_elem.value;
-      const path_name = location.pathname
-      const path_parts = path_name.split('/');
-    
-      const game_name = path_parts[1]
-      const user_name = path_parts[2]
-console.info("xxxx", game_name, "**", user_name )
-              return { ping_server_ms: ping_ms, game_name: game_name, user_name: user_name };
-          }
-        </script>
-
-        <input phx-hook="PingTime" type="text" value={"#{@server_time_ms}"}
-         hidden id="ping-box-ms" >
-      </div>
-    """
-  end
 end

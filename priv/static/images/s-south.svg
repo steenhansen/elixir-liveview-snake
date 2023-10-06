@@ -1,0 +1,11 @@
+<svg width="47" height="60" xmlns="http://www.w3.org/2000/svg">
+  <mask width="47" height="60" id="myMask">
+    <rect width="47" height="60" fill="white" x="0" y="0" />
+    <text style=" font-size: 80px; font-family:'Arial';" font-weight="bold"
+      x="-3" y="59"
+      fill="black">S</text>
+  </mask>
+  <rect width="47" height="60" fill="white" x="0" y="0" mask="url(#myMask)" />
+  <!-- <rect width="47" height="60" fill="pink" x="0" y="0" />
+  <rect width="47" height="60" fill="lavender" x="0" y="0" mask="url(#myMask)" /> -->
+</svg>

@@ -19,7 +19,7 @@ defmodule MultiGameWeb.Router do
 
     get "/", PageController, :home
 
-    live "/*path", LiveUser   #, :player_live    # PlayerLive
+    live "/*path", UserHtml   #, :player_live    # PlayerLive
 
   end
 

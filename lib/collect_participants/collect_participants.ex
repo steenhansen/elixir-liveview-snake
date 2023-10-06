@@ -1,7 +1,7 @@
 defmodule CollectParticipants do
   use GenServer
 
-  # alias MultiGameWeb.LiveUser
+  # alias MultiGameWeb.UserHtml
 
   #  https://www.openmymind.net/Elixir-A-Little-Beyond-The-Basics-Part-8-genservers/
 
@@ -16,31 +16,31 @@ defmodule CollectParticipants do
     {:ok, no_games}
   end
 
-  def handle_call({:get_participants, game_moniker}, _from_, all_games) do
-    players_in_game = all_games[game_moniker]
+  def handle_call({:get_participants, game_name}, _from_, all_games) do
+    players_in_game = all_games[game_name]
 
     this_game =
       Map.filter(
         players_in_game,
-        fn {user_name, pid_live} ->
-          Process.alive?(pid_live)
+        fn {_user_name, pid_user} ->
+          Process.alive?(pid_user)
         end
       )
 
     {:reply, this_game, all_games}
   end
 
-  def get_participants(game_moniker) do
-    GenServer.call(__MODULE__, {:get_participants, game_moniker})
+  def get_participants(game_name) do
+    GenServer.call(__MODULE__, {:get_participants, game_name})
   end
 
-  def handle_cast({:add_participant, game_moniker, user_name, new_pid_live}, old_waiting) do
-    ensure_game = Map.put_new(old_waiting, game_moniker, %{})
+  def handle_cast({:add_participant, game_name, user_name, new_pid_user}, old_waiting) do
+    ensure_game = Map.put_new(old_waiting, game_name, %{})
 
-    games_users = ensure_game[game_moniker]
+    games_users = ensure_game[game_name]
 
-    added_user = Map.put(games_users, user_name, new_pid_live)
-    new_waiting = Map.put(old_waiting, game_moniker, added_user)
+    added_user = Map.put(games_users, user_name, new_pid_user)
+    new_waiting = Map.put(old_waiting, game_name, added_user)
     {:noreply, new_waiting}
   end
 
@@ -49,8 +49,8 @@ defmodule CollectParticipants do
     {:noreply, no_players}
   end
 
-  def add_participant(game_moniker, user_name, pid_live) do
-    GenServer.cast(__MODULE__, {:add_participant, game_moniker, user_name, pid_live})
+  def add_participant(game_name, user_name, pid_user) do
+    GenServer.cast(__MODULE__, {:add_participant, game_name, user_name, pid_user})
   end
 
   def clear_participants() do
