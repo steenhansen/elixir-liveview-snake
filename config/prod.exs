@@ -18,3 +18,6 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
+
+url: [scheme: "https", host: "evening-eyrie-25210.herokuapp.com", port: 443],
+force_ssl: [rewrite_on: [:x_forwarded_proto]],
