@@ -33,7 +33,7 @@ defmodule TheGlobals do
 
 
   # 0 stop           60 med      120 slow
-  def g_start_rotation, do: 60
+  def g_start_rotation, do: 0
 
 
   def g_num_computer, do: 1
