@@ -6,7 +6,7 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :multi_game, MultiGameWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest.json",
-  url: [scheme: "https", host: "evening-eyrie-25210.herokuapp.com", port: 443],
+  url: [scheme: "https", host: "evening-eyrie-25210-f2edb2eac607.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]]
 
 
