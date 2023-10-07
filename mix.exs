@@ -5,7 +5,7 @@ defmodule MultiGame.MixProject do
     [
       app: :multi_game,
       version: "0.1.0",
-      elixir: "~> 1.14.0",
+      elixir: "~> 1.14",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -47,7 +47,8 @@ defmodule MultiGame.MixProject do
       {:gettext, "~> 0.20"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:norm, "~> 0.13"}
+      {:norm, "~> 0.13"},
+      {:hackney, "~> 1.9"}
     ]
   end
 

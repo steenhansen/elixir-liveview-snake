@@ -1,6 +1,3 @@
-
-
-
 # This file is responsible for configuring your application
 # and its dependencies with the aid of the Config module.
 #
@@ -20,7 +17,7 @@ config :multi_game, MultiGameWeb.Endpoint,
     layout: false
   ],
   pubsub_server: MultiGame.PubSub,
-  live_view: [signing_salt: "58UDmctC"]
+  live_view: [signing_salt: "n+gBfSUd"]
 
 # Configures the mailer
 #
