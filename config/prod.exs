@@ -20,4 +20,4 @@ config :logger, level: :info
 # of environment variables, is done on config/runtime.exs.
 
 url: [scheme: "https", host: "evening-eyrie-25210.herokuapp.com", port: 443],
-force_ssl: [rewrite_on: [:x_forwarded_proto]],
+	force_ssl: [rewrite_on: [:x_forwarded_proto]]
