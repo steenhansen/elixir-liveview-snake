@@ -28,6 +28,7 @@ defmodule HtmlNESW do
               <div class="flex-grid" style=" margin-top:10px">
                 <div id="direction-w" class="this-player-color" class="flex-col"
                   onmousedown=' window.live_hooks.pushEvent("key-west");  ' 
+                  touchstart=' window.live_hooks.pushEvent("key-west");  ' 
                   onmouseenter='enterNesw("direction-w")'
                   onmouseleave='leaveNesw("direction-w")'>
 
@@ -58,6 +59,7 @@ defmodule HtmlNESW do
                 </div>
                 <div id="direction-e" class="this-player-color" class="flex-col"
                   onmousedown=' window.live_hooks.pushEvent("key-east");  '
+                             touchstart=' window.live_hooks.pushEvent("key-east");  '
                    onmouseenter='enterNesw("direction-e")'
                   onmouseleave='leaveNesw("direction-e")'>
 
@@ -85,8 +87,8 @@ defmodule HtmlNESW do
           </div>
         </div>
 
-      <script>
-
+      <%!-- <script>
+           console.warn("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
         function handleNorth(evt) {
           evt.preventDefault();
           window.live_hooks.pushEvent("key-north");
@@ -94,10 +96,15 @@ defmodule HtmlNESW do
           console.warn("touchstart. N");
         }
         function handleEast(evt) {
+          console.warn("touchstart. E  1");
           evt.preventDefault();
+          console.warn("touchstart. E  2");
           window.live_hooks.pushEvent("key-east");
+          console.warn("touchstart. E  3");
             enterNesw("direction-e")
-          console.warn("touchstart. E");
+          console.warn("touchstart. E  4");
+            alert("east")
+          console.warn("touchstart. E  5");
         }
         function handleSouth(evt) {
           evt.preventDefault();
@@ -109,6 +116,7 @@ defmodule HtmlNESW do
           evt.preventDefault();
           window.live_hooks.pushEvent("key-west");
             enterNesw("direction-w")
+                        alert("west")
           console.warn("touchstart. W");
         }
 
@@ -121,7 +129,7 @@ defmodule HtmlNESW do
         southIcon.addEventListener("touchstart", handleSouth);
         westIcon.addEventListener("touchstart", handleWest);
 
-      </script>
+      </script> --%>
 
       </div>
 
