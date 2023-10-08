@@ -91,21 +91,25 @@ defmodule HtmlNESW do
           evt.preventDefault();
           log("touchstart. N");
           window.live_hooks.pushEvent("key-north");
+            enterNesw("direction-n")
         }
         function handleEast(evt) {
           evt.preventDefault();
           log("touchstart. E");
           window.live_hooks.pushEvent("key-east");
+            enterNesw("direction-e")
         }
         function handleSouth(evt) {
           evt.preventDefault();
           log("touchstart. S");
           window.live_hooks.pushEvent("key-south");
+            enterNesw("direction-s")
         }
         function handleWest(evt) {
           evt.preventDefault();
           log("touchstart. W");
           window.live_hooks.pushEvent("key-west");
+            enterNesw("direction-w")
         }
 
         const northIcon = document.getElementById("direction-n");

@@ -17,7 +17,8 @@ defmodule ServerHtml do
             html_jump_opacity: TheConsts.c_init_opacity_0(),
             html_colors: nil,
             html_alive: %{},
-            html_current: ""
+            html_current: "",
+            html_mobile: false
 end
 
 defmodule MultiGameWeb.UserHtml do
@@ -63,20 +64,24 @@ defmodule MultiGameWeb.UserHtml do
     {:noreply, socket}
   end
 
-  def handle_event(
+
+    def handle_event(
         "update-ping",
         %{
           "ping_server_ms" => string_ping_ms,
+                 "is_mobile" => is_mobile,
           "game_name" => _game_name,
           "user_name" => _user_name
         },
         socket
       ) do
+
     {start_ping_ms, ""} = Integer.parse(string_ping_ms)
     new_ping_ms = CalcPing.calc_ping(start_ping_ms, DateTime.utc_now())
-    _max_old_ping_ms = socket.assigns.html_ping
-    {:noreply, assign(socket, html_ping: new_ping_ms)}
+    {:noreply, assign(socket, html_ping: new_ping_ms, html_mobile: is_mobile)}
   end
+
+
 
   def handle_info({:find_ping_time}, socket) do
     Process.send_after(self(), {:find_ping_time}, 1000)
@@ -94,6 +99,7 @@ defmodule MultiGameWeb.UserHtml do
   end
 
   def mount(params, _session, old_socket) do
+
     Process.send_after(self(), {:find_ping_time}, 1000)
     user_names = params["path"]
     [game_name | [user_name | _]] = user_names
@@ -121,7 +127,8 @@ defmodule MultiGameWeb.UserHtml do
         html_jump_opacity: TheConsts.c_init_opacity_0(),
         html_colors: nil,
         html_alive: %{},
-        html_current: ""
+         html_current: "",
+            html_mobile: false
       )
 
     {:ok, new_socket}
@@ -262,7 +269,6 @@ defmodule MultiGameWeb.UserHtml do
     opacity_jump_2 = Map.replace(TheConsts.c_init_opacity_0(), this_color - 1, 1)
     user_rgb = TheConsts.c_convert_color_id_to_rgb()[this_color - 1]
 
-    my_var = old_socket.assigns.html_ping
     da_colors = getColors(players_html_rows_svg_inds)
 
     html_rows_jump_inds = getIcons(players_html_rows_svg_inds)
@@ -291,6 +297,11 @@ defmodule MultiGameWeb.UserHtml do
       )
 
     CalcPing.db_end_ms(db_start_ms)
+
+
+    my_var = old_socket.assigns.html_ping
+
+
     {:reply, my_var, new_socket}
   end
 
@@ -320,8 +331,9 @@ defmodule MultiGameWeb.UserHtml do
               rotate_w_px={@rotate_w_px} rotate_h_px={@rotate_h_px} />
 
           <.link href="#" phx-click="begin-game" phx-value-person-name= { @html_user } >Begin [[<%= @game_name %>]]</.link>
-          ping=<%= @html_ping %>
-      html_current == <%= @html_current %>
+          ping=<%= @html_ping %> - 
+      html_current == <%= @html_current %> - 
+            html_mobile == <%= @html_mobile %> - 
         </div>
       """
     else
@@ -381,6 +393,10 @@ defmodule MultiGameWeb.UserHtml do
         _from,
         old_socket
       ) do
+    
+   adjust_finish_scale =  if(old_socket.assigns.html_mobile, do: 1, else: new_scale)
+  
+
     db_start_ms = CalcPing.db_start_ms()
     max_hv_size = TheConsts.c_max_hor()
 
@@ -394,7 +410,7 @@ defmodule MultiGameWeb.UserHtml do
     opacity_jump_2 = Map.replace(TheConsts.c_init_opacity_0(), this_color - 1, 1)
     user_rgb = TheConsts.c_convert_color_id_to_rgb()[this_color - 1]
 
-    my_var = old_socket.assigns.html_ping
+
     da_colors = getColors(players_html_rows_svg_inds)
 
     html_rows_jump_inds = getIcons(players_html_rows_svg_inds)
@@ -410,7 +426,7 @@ defmodule MultiGameWeb.UserHtml do
         html_h_px: TheConsts.c_board_ver_px(),
         rotate_w_px: TheConsts.c_board_hor_px() + 1,
         rotate_h_px: TheConsts.c_board_ver_px() + 1,
-        html_scale: new_scale,
+        html_scale: adjust_finish_scale,
         html_offset_x: scale_x_px,
         html_offset_y: scale_y_px,
         html_rows_svg_inds: da_colors,
@@ -424,6 +440,7 @@ defmodule MultiGameWeb.UserHtml do
       )
 
     CalcPing.db_end_ms(db_start_ms)
+        my_var = old_socket.assigns.html_ping
     {:reply, my_var, new_socket}
   end
 
@@ -451,9 +468,9 @@ defmodule MultiGameWeb.UserHtml do
 
   def handle_call({:color_index, pid_board}, _from, old_socket) do
     the_colors = GameBoard.board_colors(pid_board)
-   html_user = old_socket.assigns.html_user
+    html_user = old_socket.assigns.html_user
     this_color = the_colors[html_user]
-      {:reply, this_color, old_socket}
+    {:reply, this_color, old_socket}
   end
 
   def send_countdown(pid_user, html_pid_board, html_pid_tick, players_matrix) do
@@ -482,7 +499,6 @@ defmodule MultiGameWeb.UserHtml do
     opacity_jump_2 = Map.replace(TheConsts.c_init_opacity_0(), this_color - 1, 1)
     user_rgb = TheConsts.c_convert_color_id_to_rgb()[this_color - 1]
 
-    my_var = old_socket.assigns.html_ping
     da_colors = getColors(players_html_rows_svg_inds)
 
     html_rows_jump_inds = getIcons(players_html_rows_svg_inds)
@@ -511,6 +527,8 @@ defmodule MultiGameWeb.UserHtml do
       )
 
     CalcPing.db_end_ms(db_start_ms)
+    
+    my_var = old_socket.assigns.html_ping
     {:reply, my_var, new_socket}
   end
 end

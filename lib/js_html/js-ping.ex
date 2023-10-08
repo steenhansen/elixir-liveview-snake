@@ -13,6 +13,7 @@ defmodule JsPing do
 
         window.live_hooks = this;
         server_ms_time = serverMsFromClient();
+
         this.pushEvent("update-ping", server_ms_time);
         setTimeout(() => {
             nesw_div = document.getElementById("nesw");
@@ -33,8 +34,21 @@ defmodule JsPing do
 
       const game_name = path_parts[1]
       const user_name = path_parts[2]
-    console.info("xxxx", game_name, "**", user_name )
-              return { ping_server_ms: ping_ms, game_name: game_name, user_name: user_name };
+
+
+if (window.navigator.maxTouchPoints || 'ontouchstart' in document) {
+   isMobile = true
+}else{
+  isMobile = false
+}
+
+
+       
+
+    the_return ={ ping_server_ms: ping_ms, is_mobile: isMobile, game_name: game_name, user_name: user_name }
+    // console.warn("BBBBBBBBBBBBB", the_return, "**", isMobile )
+
+              return the_return;
           }
         </script>
 
