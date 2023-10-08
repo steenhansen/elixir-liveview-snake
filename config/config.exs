@@ -7,11 +7,14 @@
 # General application configuration
 import Config
 
+
+
 # Configures the endpoint
 config :multi_game, MultiGameWeb.Endpoint,
-  #url: [host: "localhost"],
-  #  https://elixirforum.com/t/failed-to-connect-to-websocket-on-production/35440/5
-    url: [host: "evening-eyrie-25210-f2edb2eac607.herokuapp.com", port: 443, scheme: "https"],
+    url: [
+      host: "evening-eyrie-25210-f2edb2eac607.herokuapp.com",
+       port: 443, 
+       scheme: "https"],
   render_errors: [
     formats: [html: MultiGameWeb.ErrorHTML, json: MultiGameWeb.ErrorJSON],
     layout: false

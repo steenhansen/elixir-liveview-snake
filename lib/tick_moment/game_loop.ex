@@ -23,8 +23,8 @@ defmodule GameLoop do
         pid_user = pid_user_and_pid_snake.pid_user
         user_color = UserHtml.color_index(pid_user, pid_board)
 
-        x_offset = 17         # 26x26   x=8           44 x=17
-        y_offset = 12         # 26x26   y=2           44 y=15
+        x_offset = 0         # 26x26   x=8           44 x=17
+        y_offset = 1        # 26x26   y=2           44 y=15
 
         players_matrix =
           Countdown321.make_countdown(pid_board, user_color, x_offset, y_offset, start_countdown)

@@ -3,7 +3,7 @@ defmodule TheGlobals do
 
 
   # this must be at least 4 !
-  def g_real_snake_len, do: 13     # def c_jump_states, do: 4
+  def g_real_snake_len, do: 8     # def c_jump_states, do: 4
 ##qqqqqq
 
 
@@ -13,9 +13,11 @@ defmodule TheGlobals do
 
   # 26x26  x=8 y=2
 
+  # 22x12  x= y=0
+
   # 4 is the smallest MUST BE EVEN  44 
-  def g_board_hor, do: 44           ## 26 smawll
-  def g_board_ver, do: 44           ## 26 small
+  def g_board_hor, do: 12           ## 26 smawll
+  def g_board_ver, do: 22           ## 26 small
 
 # 44 x 44 x_offset==8+9=17  
 #         y_offset==2+13=15  browser_countdown

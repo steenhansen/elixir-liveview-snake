@@ -3,7 +3,7 @@
 defmodule CssPlain do
   use MultiGameWeb, :live_component
 
-  # nesw-spacer    height:400px; sm
+  # nesw-spacer    height:300px; sm
   #                height:600px;   Large
 
   # #live_user {
@@ -20,7 +20,7 @@ defmodule CssPlain do
 
       <style >
          #nesw-spacer {
-        height:600px; 
+        height:300px; 
         visibility:hidden;
         }
 
