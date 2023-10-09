@@ -9,6 +9,27 @@ defmodule HtmlNESW do
 
   def render(assigns) do
     ~H"""
+    <div>
+
+
+      <div ontouchstart='    window.live_hooks.pushEvent("key-north");  '   style="margin-right: 24px"  >
+                 NNNNN<br>
+                 NNNNN
+        </div>
+      <div ontouchstart='    window.live_hooks.pushEvent("key-east");  '    style="margin-right: 24px"  >
+                 EEEEE<br>
+                 EEEEE
+        </div>
+
+      <div ontouchstart='    window.live_hooks.pushEvent("key-south");  '   style="margin-right: 24px"  >
+                 SSSSS<br>
+                 SSSSS
+        </div>
+
+      <div ontouchstart='    window.live_hooks.pushEvent("key-west");  '   style="margin-right: 24px"  >
+                 WWWWW<br>
+                 WWWWW
+        </div>
 
       <div id="nesw" style="clear:both; visibility:hidden; position:relative" class="XXXXflex-grid">
         <div class=""  >
@@ -82,7 +103,7 @@ defmodule HtmlNESW do
 
 
 
-
+    </div>
     """
   end
 end
