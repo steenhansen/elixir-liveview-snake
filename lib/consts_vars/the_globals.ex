@@ -28,7 +28,7 @@ defmodule TheGlobals do
   # c_slow_12_5_a_sec
   # c_med_25_a_sec
   # c_fast_50_a_sec
-  def g_frames_per_sec, do: TheConsts.c_slow_super()
+  def g_frames_per_sec, do: TheConsts.c_med_25_a_sec()
 
 
 

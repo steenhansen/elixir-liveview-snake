@@ -50,7 +50,7 @@ defmodule HtmlNESW do
                   </div>
 
                 </div>
-                <div id="direction-e" class="this-player-color" class="flex-col" style="border: thick double #32a1ce;"
+                <div id="direction-e" class="this-player-color" class="flex-col" 
         
                               onpointerdown='  window.live_hooks.pushEvent("key-east");   ' 
      >
