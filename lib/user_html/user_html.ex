@@ -311,7 +311,7 @@ defmodule MultiGameWeb.UserHtml do
         <div>
 
 
-          <.live_component module={JsOnload} id="js-onload"  />
+
           <.live_component module={JsPing} id="js-ping"  html_server_ms ={@html_server_ms} />
 
             <.live_component module={CssPlain} id="css-plain" />
@@ -330,10 +330,16 @@ defmodule MultiGameWeb.UserHtml do
               
               rotate_w_px={@rotate_w_px} rotate_h_px={@rotate_h_px} />
 
+              <div id="nesw-spacer" >&nbsp;</div>
+            
+
           <.link href="#" phx-click="begin-game" phx-value-person-name= { @html_user } >Begin [[<%= @game_name %>]]</.link>
           ping=<%= @html_ping %> - 
       html_current == <%= @html_current %> - 
             html_mobile == <%= @html_mobile %> - 
+            <div id='bart'        onpointerdown='console.warn(window.live_hooks.pushEvent) '> i am bart </div>
+
+                      <.live_component module={JsOnload} id="js-onload"  />
         </div>
       """
     else
@@ -341,7 +347,7 @@ defmodule MultiGameWeb.UserHtml do
       ~H"""
         <div id="user-html" style="width: 360px">
            
-          <.live_component module={JsOnload} id="js-onload"  />
+ 
           <div id='live_user'>
                 <.live_component module={JsPing} id="js-ping"  html_server_ms ={@html_server_ms} />
 
@@ -372,8 +378,8 @@ defmodule MultiGameWeb.UserHtml do
             
             </div>
 
-            
-
+            <div id='bassrt'  onpointerdown='  console.warn(window.live_hooks.pushEvent)  '> i am bart </div>
+          <.live_component module={JsOnload} id="js-onload"  />
         </div>
       """
     end

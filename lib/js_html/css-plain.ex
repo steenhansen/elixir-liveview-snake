@@ -82,8 +82,12 @@ defmodule CssPlain do
             height:40px;
           }
 
+          #direction-e{
+           touch-action:none;
+          }
 
           #picture-e{
+            touch-action:none;
             width:21px;
             height:30px;
           }

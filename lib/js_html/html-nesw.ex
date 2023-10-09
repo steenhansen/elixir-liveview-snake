@@ -11,35 +11,28 @@ defmodule HtmlNESW do
     ~H"""
 
       <div id="nesw" style="clear:both; visibility:hidden; position:relative" class="XXXXflex-grid">
-        <div class="">
-          <div class="">
+        <div class=""  >
+          <div class=""    >
 
             <div style="margin-left:0px">
               <div class="flex-grid">
                 <div></div>
                 <div id="direction-n" class="this-player-color" class="flex-col"
-                  onmousedown=' window.live_hooks.pushEvent("key-north")' 
-                  onmouseenter='enterNesw("direction-n")'
-                  onmouseleave='leaveNesw("direction-n")'>
+                  onpointerdown='    window.live_hooks.pushEvent("key-north");  '    >
                   <img id="picture-n" src="/images/n-north.svg" />
                 </div>
                 <div></div>
               </div>
               <div class="flex-grid" style=" margin-top:10px">
                 <div id="direction-w" class="this-player-color" class="flex-col"
-                  onmousedown=' window.live_hooks.pushEvent("key-west");  ' 
-                  touchstart=' window.live_hooks.pushEvent("key-west");  ' 
-                  onmouseenter='enterNesw("direction-w")'
-                  onmouseleave='leaveNesw("direction-w")'>
+                  onpointerdown='  window.live_hooks.pushEvent("key-west");  '    >
 
                   <img id="picture-w" src="/images/w-west.svg" />
 
                 </div>
-                <div id="jump-man" onmousedown=' window.live_hooks.pushEvent("key-jump");  '
-                 onmouseenter='enterJump()'
-                  onmouseleave='leaveJump()'>
+                <div id="jump-man"   onpointerdown='   window.live_hooks.pushEvent("key-jump");   ' >
 
-                  <div>
+                  <div       >
 
 
                     <img id="jump-1" src="/images/colored-icons.svg#14" class="colored-jump" />
@@ -57,27 +50,24 @@ defmodule HtmlNESW do
                   </div>
 
                 </div>
-                <div id="direction-e" class="this-player-color" class="flex-col"
-                  onmousedown=' window.live_hooks.pushEvent("key-east");  '
-                             touchstart=' window.live_hooks.pushEvent("key-east");  '
-                   onmouseenter='enterNesw("direction-e")'
-                  onmouseleave='leaveNesw("direction-e")'>
+                <div id="direction-e" class="this-player-color" class="flex-col" style="border: thick double #32a1ce;"
+        
+                              onpointerdown='  window.live_hooks.pushEvent("key-east");   ' 
+     >
 
 
-                  <img id="picture-e" src="/images/e-east.svg" />
+                  <img id="picture-e" src="/images/e-east.svg"  />
 
 
                 </div>
               </div>
-              <div class="flex-grid" style=" margin-top:2px">
+              <div class="flex-grid" style=" margin-top:2px"    >
                 <div></div>
                 <div id="direction-s" class="this-player-color" class="flex-col"
-                  onmousedown=' window.live_hooks.pushEvent("key-south");  '
-                   onmouseenter='enterNesw("direction-s")'
-                  onmouseleave='leaveNesw("direction-s")'>
+                  onpointerdown=' window.live_hooks.pushEvent("key-south");  '   >
 
 
-                  <img id="picture-s" src="/images/s-south.svg" />
+                  <img id="picture-s" src="/images/s-south.svg"  />
                 </div>
                 <div></div>
               </div>
@@ -87,50 +77,7 @@ defmodule HtmlNESW do
           </div>
         </div>
 
-      <%!-- <script>
-           console.warn("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
-        function handleNorth(evt) {
-          evt.preventDefault();
-          window.live_hooks.pushEvent("key-north");
-            enterNesw("direction-n")
-          console.warn("touchstart. N");
-        }
-        function handleEast(evt) {
-          console.warn("touchstart. E  1");
-          evt.preventDefault();
-          console.warn("touchstart. E  2");
-          window.live_hooks.pushEvent("key-east");
-          console.warn("touchstart. E  3");
-            enterNesw("direction-e")
-          console.warn("touchstart. E  4");
-            alert("east")
-          console.warn("touchstart. E  5");
-        }
-        function handleSouth(evt) {
-          evt.preventDefault();
-          window.live_hooks.pushEvent("key-south");
-            enterNesw("direction-s")
-          console.warn("touchstart. S");
-        }
-        function handleWest(evt) {
-          evt.preventDefault();
-          window.live_hooks.pushEvent("key-west");
-            enterNesw("direction-w")
-                        alert("west")
-          console.warn("touchstart. W");
-        }
-
-        const northIcon = document.getElementById("direction-n");
-        const eastIcon = document.getElementById("direction-e");
-        const southIcon = document.getElementById("direction-s");
-        const westIcon = document.getElementById("direction-w");
-        northIcon.addEventListener("touchstart", handleNorth);
-        eastIcon.addEventListener("touchstart", handleEast);
-        southIcon.addEventListener("touchstart", handleSouth);
-        westIcon.addEventListener("touchstart", handleWest);
-
-      </script> --%>
-
+   
       </div>
 
 
