@@ -11,29 +11,29 @@ defmodule CssVars do
         <style >
 
           :root {
-            --rotator-change:  <%= @html_rotate %>;
-     --html_scale:  <%= @html_scale %>;
-          --html_offset_x:  <%= @html_offset_x %>;
-          --html_offset_y:  <%= @html_offset_y %>;
-            --the-player-colors:  <%= @html_colors %>;
-            --jump_0_opacity: <%= @html_jump_opacity[0] %>;
-            --jump_1_opacity: <%= @html_jump_opacity[1] %>;
-            --jump_2_opacity: <%= @html_jump_opacity[2] %>;
-            --jump_3_opacity: <%= @html_jump_opacity[3] %>;
-            --jump_4_opacity: <%= @html_jump_opacity[4] %>;
-            --jump_5_opacity: <%= @html_jump_opacity[5] %>;
-            --jump_6_opacity: <%= @html_jump_opacity[6] %>;
-            --jump_7_opacity: <%= @html_jump_opacity[7] %>;
-            --jump_8_opacity: <%= @html_jump_opacity[8] %>;
-            --jump_9_opacity: <%= @html_jump_opacity[9] %>;
+            --rotator-change:  <%= @data_rotate %>;
+     --data_scale:  <%= @data_scale %>;
+          --data_offset_x:  <%= @data_offset_x %>;
+          --data_offset_y:  <%= @data_offset_y %>;
+            --the-player-colors:  <%= @data_colors %>;
+            --jump_0_opacity: <%= @data_jump_opacity[0] %>;
+            --jump_1_opacity: <%= @data_jump_opacity[1] %>;
+            --jump_2_opacity: <%= @data_jump_opacity[2] %>;
+            --jump_3_opacity: <%= @data_jump_opacity[3] %>;
+            --jump_4_opacity: <%= @data_jump_opacity[4] %>;
+            --jump_5_opacity: <%= @data_jump_opacity[5] %>;
+            --jump_6_opacity: <%= @data_jump_opacity[6] %>;
+            --jump_7_opacity: <%= @data_jump_opacity[7] %>;
+            --jump_8_opacity: <%= @data_jump_opacity[8] %>;
+            --jump_9_opacity: <%= @data_jump_opacity[9] %>;
           }
 
 
 
         #zoom-board {
-          left: var(--html_offset_x);
-          top: var(--html_offset_y);
-            scale: var(--html_scale);
+          left: var(--data_offset_x);
+          top: var(--data_offset_y);
+            scale: var(--data_scale);
         }
 
         .this-player-color {

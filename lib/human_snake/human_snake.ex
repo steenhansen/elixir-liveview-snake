@@ -37,13 +37,13 @@ defmodule HumanPlayer do
 
   use GenServer
 
-  def start_link(start) do
-    GenServer.start_link(HumanPlayer, start)
+  def start_link(start, snake_length) do
+    GenServer.start_link(HumanPlayer, {start, snake_length})
   end
 
-  def init(init_snake) do
+  def init({init_snake, snake_length}) do
     init_pixel = {init_snake.start_x, init_snake.start_y}
-    init_snake_xys_list = PlayerSnake.initSnake(init_pixel)
+    init_snake_xys_list = PlayerSnake.initSnake(init_pixel, snake_length)
 
     human_snake = %HumanSnake{
       human_direction: init_snake.start_direction,
@@ -108,10 +108,7 @@ defmodule HumanPlayer do
     GenServer.call(pid, {:snakeId})
   end
 
-  def handle_call({:snakeId}, _, snake) do
-    snake_id = snake.human_name
-    {:reply, snake_id, snake}
-  end
+
 
   def add_slice(human_snake, snake_front) do
     human_direction = human_snake.human_direction
@@ -130,31 +127,7 @@ defmodule HumanPlayer do
     _new_leap = Map.put(old_leap, snake_front, jump_slice)
   end
 
-  def handle_call({:jumpSnake, pid_board}, _from, human_snake) do
-    human_jump = human_snake.human_jump
-    old_leaps = human_snake.human_leap
-    moved_snake = moveSnake2(human_snake, pid_board)
-    snake_front = moved_snake.snake_front
-    if moved_snake.snake_dead do
-      {:reply, snake_front, moved_snake}
-    else
-      if human_jump > 0 do
-        new_leap = add_slice(human_snake, snake_front)
-        new_jump = human_jump - 1
-        jumped_snake = %HumanSnake{
-          moved_snake
-          | human_jump: new_jump,
-            human_leap: new_leap
-        }
-        {:reply, snake_front, jumped_snake}
-      else
-        the_rump = moved_snake.snake_rump
-        new_leap = Map.delete(old_leaps, the_rump)
-        normal_snake = %HumanSnake{moved_snake | human_leap: new_leap}
-        {:reply, snake_front, normal_snake}
-      end
-    end
-  end
+ 
 
   def jumpedSnake2(human_snake) do
     if human_snake.human_jump > 0 do
@@ -179,16 +152,16 @@ defmodule HumanPlayer do
     if human_snake.snake_dead do
       human_snake
     else
-      [width_game, height_game] = GameBoard.board_size(pid_board)
+      [board_width, board_height] = GameBoard.board_size(pid_board)
       [new_rump | new_body] = human_snake.snake_xys_list
       {x_front, y_front} = human_snake.snake_front
 
       new_front =
         case head_direction do
-          "up" -> PlayerSnake.moveUp(x_front, y_front, height_game)
-          "right" -> PlayerSnake.moveRight(x_front, y_front, width_game)
-          "down" -> PlayerSnake.moveDown(x_front, y_front, height_game)
-          "left" -> PlayerSnake.moveLeft(x_front, y_front, width_game)
+          "up" -> PlayerSnake.moveUp(x_front, y_front, board_height)
+          "right" -> PlayerSnake.moveRight(x_front, y_front, board_width)
+          "down" -> PlayerSnake.moveDown(x_front, y_front, board_height)
+          "left" -> PlayerSnake.moveLeft(x_front, y_front, board_width)
         end
 
       new_snake_xys_list = new_body ++ [new_front]
@@ -239,7 +212,42 @@ defmodule HumanPlayer do
     if human_snake.snake_dead do
       {:reply, false, human_snake}
     else
-      {:reply, human_snake.snake_front, human_snake}
+    #  dbg({"winner 23423", human_snake})
+      winner_name = human_snake.human_name
+      winner_front = human_snake.snake_front
+      snake_front_and_name = [winner_front, winner_name]
+      {:reply, snake_front_and_name, human_snake}
+    end
+  end
+
+    def handle_call({:snakeId}, _, snake) do
+    snake_id = snake.human_name
+    {:reply, snake_id, snake}
+  end
+
+ def handle_call({:jumpSnake, pid_board}, _from, human_snake) do
+    human_jump = human_snake.human_jump
+    old_leaps = human_snake.human_leap
+    moved_snake = moveSnake2(human_snake, pid_board)
+    snake_front = moved_snake.snake_front
+    if moved_snake.snake_dead do
+      {:reply, snake_front, moved_snake}
+    else
+      if human_jump > 0 do
+        new_leap = add_slice(human_snake, snake_front)
+        new_jump = human_jump - 1
+        jumped_snake = %HumanSnake{
+          moved_snake
+          | human_jump: new_jump,
+            human_leap: new_leap
+        }
+        {:reply, snake_front, jumped_snake}
+      else
+        the_rump = moved_snake.snake_rump
+        new_leap = Map.delete(old_leaps, the_rump)
+        normal_snake = %HumanSnake{moved_snake | human_leap: new_leap}
+        {:reply, snake_front, normal_snake}
+      end
     end
   end
 end

@@ -1,152 +1,185 @@
-defmodule GameMoments do
-  defstruct pid_board: nil,
-            human_players: Map.new(),
-            robot_players: Map.new(),
-            max_game_ping: 0,
-            finished_game: false,
-            game_scale: 1,
-            start_countdown: 3,
-            winner_front: {0, 0}
-end
-
 defmodule GameLoop do
   alias MultiGameWeb.UserHtml
 
   def browser_countdown(pid_tick, tick_moment) do
-    human_players = tick_moment.human_players
-    robot_players = tick_moment.robot_players
+    seq_humans = tick_moment.seq_humans
+    _seq_robots = tick_moment.seq_robots
     pid_board = tick_moment.pid_board
-    start_countdown = tick_moment.start_countdown
+    seq_countdown = tick_moment.seq_countdown
+    seq_match_choices = tick_moment.seq_match_choices
+    seq_game_sizes = tick_moment.seq_game_sizes
 
-    max_pings =
-      for {_person_name, pid_user_and_pid_snake} <- human_players, into: [] do
+      for {_person_name, pid_user_and_pid_snake} <- seq_humans, into: [] do
         pid_user = pid_user_and_pid_snake.pid_user
         user_color = UserHtml.color_index(pid_user, pid_board)
 
-        x_offset = 0         # 26x26   x=8           44 x=17
-        y_offset = 1        # 26x26   y=2           44 y=15
+        # 26x26   x=8           44 x=17
+        x_offset = 0
+        # 26x26   y=2           44 y=15
+        y_offset = 1
 
         players_matrix =
-          Countdown321.make_countdown(pid_board, user_color, x_offset, y_offset, start_countdown)
+          Countdown321.make_countdown(pid_board, user_color, x_offset, y_offset, seq_countdown)
 
-        UserHtml.send_countdown(pid_user, pid_board, pid_tick, players_matrix)
+        UserHtml.send_countdown(
+          pid_user,
+          pid_board,
+          pid_tick,
+          players_matrix,
+          seq_match_choices,
+          seq_game_sizes
+        )
       end
 
-    started_moment = %GameMoments{
+    _started_moment = %GameSequences{
       tick_moment
-      | max_game_ping: max_pings,
-        start_countdown: start_countdown - 1
+      |  seq_countdown: seq_countdown - 1
     }
   end
 
   ##############################
   def browser_message(pid_tick, tick_moment) do
-    human_players = tick_moment.human_players
-    robot_players = tick_moment.robot_players
+    seq_humans = tick_moment.seq_humans
+    seq_robots = tick_moment.seq_robots
+
+    players_alive = GameBoard.players_alive(tick_moment.pid_board)
+
+    just_finished? = players_alive < TheConsts.c_two_players()
 
     _next_moment =
       cond do
-        tick_moment.finished_game -> endZoomIn(pid_tick, tick_moment)
-        true -> playingGame(pid_tick, tick_moment, human_players, robot_players)
+        tick_moment.seq_finished -> endZoomIn(pid_tick, tick_moment)
+        just_finished? -> endPrepare(tick_moment, seq_humans, seq_robots)
+        true -> playingGame(pid_tick, tick_moment, seq_humans, seq_robots)
       end
   end
 
-  def playingGame(pid_tick, tick_moment, human_players, robot_players) do
-    max_ping = gameCycle(pid_tick, tick_moment, human_players, robot_players)
-    players_alive = GameBoard.players_alive(tick_moment.pid_board)
-   
-    just_finished? = players_alive < TheConsts.c_two_players()
+  def playingGame(pid_tick, tick_moment, seq_humans, seq_robots) do
+    max_ping = gameCycle(pid_tick, tick_moment, seq_humans, seq_robots)
 
-    if just_finished? do
-      endPrepare(tick_moment, human_players, robot_players)
-    else
-      started_moment = %GameMoments{
-        tick_moment
-        | max_game_ping: max_ping
-      }
-    end
+    _started_moment = %GameSequences{
+      tick_moment
+      | seq_max_ping: max_ping
+    }
   end
 
-  def gameCycle(pid_tick, tick_moment, human_players, robot_players) do
+  def gameCycle(pid_tick, tick_moment, seq_humans, seq_robots) do
     pid_board = tick_moment.pid_board
-
-    for {_robot_number, pid_only_snake} <- robot_players, into: [] do
+    seq_match_choices = tick_moment.seq_match_choices
+    seq_game_sizes = tick_moment.seq_game_sizes
+    seq_max_ping  = tick_moment.seq_max_ping
+    for {_robot_number, pid_only_snake} <- seq_robots, into: [] do
       pid_snake = pid_only_snake.pid_snake
-      _robot_front = RobotPlayer.jumpSnake(pid_snake, pid_board)
+      RobotPlayer.jumpSnake(pid_snake, pid_board)
     end
 
-    for {_person_name, pid_user_and_pid_snake} <- human_players, into: [] do
+    for {_person_name, pid_user_and_pid_snake} <- seq_humans, into: [] do
       pid_snake = pid_user_and_pid_snake.pid_snake
-      _snake_front = HumanPlayer.jumpSnake(pid_snake, pid_board)
+      HumanPlayer.jumpSnake(pid_snake, pid_board)
     end
 
     players_matrix = GameBoard.snake_matrix(pid_board)
 
     max_pings =
-      for {_person_name, pid_user_and_pid_snake} <- human_players, into: [] do
+      for {_person_name, pid_user_and_pid_snake} <- seq_humans, into: [] do
         pid_user = pid_user_and_pid_snake.pid_user
-        UserHtml.send_board(pid_user, pid_board, pid_tick, players_matrix)
+
+        UserHtml.send_board(
+          pid_user,
+          pid_board,
+          pid_tick,
+          players_matrix,
+          seq_match_choices,
+          seq_game_sizes, seq_max_ping
+        )
       end
 
-    max_ping = Enum.max(max_pings)
+    _max_ping = Enum.max(max_pings)
   end
 
-  def gameCycle22(pid_tick, tick_moment, human_players, robot_players) do
+  def showStartPositions(tick_moment, seq_humans, seq_robots) do
     pid_board = tick_moment.pid_board
 
-    for {_robot_number, pid_only_snake} <- robot_players, into: [] do
+    for {_robot_number, pid_only_snake} <- seq_robots, into: [] do
       pid_snake = pid_only_snake.pid_snake
-      _robot_front = RobotPlayer.jumpSnake(pid_snake, pid_board)
+      RobotPlayer.jumpSnake(pid_snake, pid_board)
     end
 
-    for {_person_name, pid_user_and_pid_snake} <- human_players, into: [] do
+    for {_person_name, pid_user_and_pid_snake} <- seq_humans, into: [] do
       pid_snake = pid_user_and_pid_snake.pid_snake
-      _snake_front = HumanPlayer.jumpSnake(pid_snake, pid_board)
+      HumanPlayer.jumpSnake(pid_snake, pid_board)
     end
 
-    players_matrix = GameBoard.snake_matrix(pid_board)
+    GameBoard.snake_matrix(pid_board)
   end
 
-  def endPrepare(tick_moment, human_players, robot_players) do
-    human_front_winner = humanWinCoord(human_players)
-    robot_front_winner = robotWinCoord(robot_players)
+  def adjustCenter(winner_front) do
+    {x_front, y_front} = winner_front
+    x_adjust = (x_front-36)/80
+    y_adjust = (y_front-36)/80
+    adjust_x = x_front + x_adjust
+    adjust_y = y_front + y_adjust
+     {adjust_x, adjust_y}
+  end 
+
+  def endPrepare(tick_moment, seq_humans, seq_robots) do
+    human_front_winner = humanWinCoord(seq_humans)
+    #   [winner_front, winner_name] = winner_xy_name
+   # dbg(human_front_winner)
+    robot_front_winner = robotWinCoord(seq_robots)
     empty_square = GameBoard.free_square(tick_moment.pid_board)
     human_win = human_front_winner != nil
     robot_win = robot_front_winner != nil
 
+    # 1,1 =>           #{0.6, 0.6},
+    # 21,21 => {20.8,20.8},
+    # 36,36 => {36,36}
+    # 42,42 =>{42.1,42.1}
+
+
     _the_winner =
       cond do
         human_win ->
-          user_tick = %GameMoments{
+                          [winner_front, winner_name] = human_front_winner
+                    dbg(winner_front)
+           # dbg(winner_name)
+          _user_tick = %GameSequences{
+
             tick_moment
-            | winner_front: human_front_winner,
-              finished_game: true
+            | seq_winner_front: winner_front,
+            seq_winner_name: winner_name,
+   #         | seq_winner_front: adjustCenter({42,42}),
+              seq_finished: true
           }
 
         robot_win ->
-          user_tick = %GameMoments{
+          _user_tick = %GameSequences{
             tick_moment
-            | winner_front: robot_front_winner,
-              finished_game: true
+          | seq_winner_front: robot_front_winner,
+#             |      seq_winner_front: adjustCenter({42,42}),
+              seq_finished: true
           }
 
         true ->
-          user_tick = %GameMoments{tick_moment | winner_front: empty_square, finished_game: true}
+          _user_tick = %GameSequences{tick_moment | seq_winner_front: empty_square, seq_finished: true}
       end
   end
 
   def endZoomIn(pid_tick, tick_moment) do
-    pid_board = tick_moment.pid_board
-    human_players = tick_moment.human_players
 
-    old_scale = tick_moment.game_scale
-    {winner_x, winner_y} = tick_moment.winner_front
+    pid_board = tick_moment.pid_board
+    seq_humans = tick_moment.seq_humans
+    seq_game_sizes = tick_moment.seq_game_sizes
+
+    old_scale = tick_moment.seq_scale
+    {winner_x, winner_y} = tick_moment.seq_winner_front
+      winner_name = tick_moment.seq_winner_name
+     # dbg(winner_name)
     winner_center = {winner_x + 0.5, winner_y + 0.5}
     [new_scale, scale_x_px, scale_y_px] = endScale(old_scale, winner_center)
     players_matrix = GameBoard.snake_matrix(pid_board)
 
-    max_pings =
-      for {_person_name, pid_user_and_pid_snake} <- human_players, into: [] do
+      for {_person_name, pid_user_and_pid_snake} <- seq_humans, into: [] do
         pid_user = pid_user_and_pid_snake.pid_user
 
         if old_scale > TheConsts.c_scaling_steps() do
@@ -159,34 +192,45 @@ defmodule GameLoop do
             players_matrix,
             new_scale,
             scale_x_px,
-            scale_y_px
+            scale_y_px,
+            seq_game_sizes,
+            winner_name
           )
         end
       end
-
-    winner_tick = %GameMoments{
+   #   dbg("befor win tick")
+    _winner_tick = %GameSequences{
       tick_moment
-      | game_scale: new_scale
+      | seq_scale: new_scale
     }
   end
 
-  def humanWinCoord(human_players) do
-    xy =
-      for {_person_name, pid_user_and_pid_snake} <- human_players do
+  def humanWinCoord(seq_humans) do
+    xy_name_list =
+      for {_person_name, pid_user_and_pid_snake} <- seq_humans do
         pid_snake = pid_user_and_pid_snake.pid_snake
-        snake_front_or_false = HumanPlayer.winnerHead(pid_snake)
+        snake_front_and_name = HumanPlayer.winnerHead(pid_snake)
 
-        if snake_front_or_false do
-          snake_front_or_false
+        if snake_front_and_name do
+          snake_front_and_name
         end
       end
+   #   dbg(xy_name_list)
 
-    Enum.at(xy, 0)
+      winner_xy_name =     Enum.at(xy_name_list, 0)
+  # dbg(winner_xy_name)
+    #  [winner_front, winner_name] = winner_xy_name
+         #   dbg(winner_front)
+          #  dbg(winner_name)
+#    Enum.at(xy, 0)
+    #Enum.at(winner_front, 0)
+   # winner_front
+    winner_xy_name
   end
 
-  def robotWinCoord(robot_players) do
+  def robotWinCoord(seq_robots) do
     xy =
-      for {_person_name, pid_only_snake} <- robot_players do
+      for {_person_name, pid_only_snake} <- seq_robots do
         pid_snake = pid_only_snake.pid_snake
         snake_front_or_false = RobotPlayer.winnerHead(pid_snake)
 
@@ -199,11 +243,11 @@ defmodule GameLoop do
   end
 
   def float2Px(scale_offset) do
-    scaled_px = "-" <> Integer.to_string(round(scale_offset)) <> "px"
+    _scaled_px = "-" <> Integer.to_string(round(scale_offset)) <> "px"
   end
 
-  def endScale(prev_scale, winner_front) do
-    {coord_x, coord_y} = winner_front
+  def endScale(prev_scale, seq_winner_front) do
+    {coord_x, coord_y} = seq_winner_front
 
     offset_x_size = coord_x * TheConsts.c_tile_pixels()
     offset_y_size = coord_y * TheConsts.c_tile_pixels()

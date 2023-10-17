@@ -63,24 +63,24 @@ defmodule SnakeDraw do
     {:noreply, next_board}
   end
 
-  def hit_snake?(snake_change, the_emptys, snake_bodies) do
+  def hit_snake?(snake_change, _the_emptys, snake_bodies) do
 
     _snake_hit =
       snake_bodies
-      |> Enum.map(fn {html_user, snake_body} ->
-        if snake_change.change_id != html_user do
+      |> Enum.map(fn {user_name, snake_body} ->
+        if snake_change.change_id != user_name do
           if Enum.count(snake_body) > 0 do
              front_hit_other = MapSet.member?(snake_body, snake_change.change_front)
              snake_not_jump = snake_change.change_jump==0
 
             if front_hit_other and snake_not_jump do
-              html_user
+              user_name
             end
           end
         end
       end)
       |> Enum.filter(fn a_name -> a_name end)
 
-    _snake_hit
+
   end
 end

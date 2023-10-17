@@ -1,6 +1,6 @@
 
 defmodule Countdown321 do
-  alias MultiGameWeb.UserHtml
+  #alias MultiGameWeb.UserHtml
 
 
 def make_1_2_3(count_number, x_offset, y_offset) do
@@ -86,25 +86,22 @@ def offsetNumber(xy_coords, x_offset, y_offset) do
           {x_coord, y_coord} = xy_coord
           x_move = x_coord + x_offset
           y_move = y_coord + y_offset
-          moved_coord = { x_move, y_move}
+          _moved_coord = { x_move, y_move}
     end)
           |> MapSet.new()
 
 end
 
 def make_countdown(pid_board, user_color, x_offset, y_offset, count_number) do
-  players_matrix = GameBoard.snake_matrix(pid_board)
-  number_color =  %XySvgCss{svg_index: user_color*10, css_jump: "no-jump"}
   empty_matrix = GameBoard.snake_matrix(pid_board)
-
   number_xy_coords = make_1_2_3(count_number, x_offset, y_offset)
-  walled_matrix =
+  _walled_matrix =
       empty_matrix
       |> Enum.map(fn ({xy_coord, xy_svg_css}) ->
         if MapSet.member?(number_xy_coords, xy_coord) do
           brightness = count_number - 1     # 3==> 2 ==> 22
           brightening_color = user_color*10 + brightness
-          {xy_coord, %XySvgCss{svg_index: brightening_color, css_jump: "no-jump"}}
+          {xy_coord, %XySvgCss{svgCss_icon_ind: brightening_color, svgCss_css_jump: "no-jump"}}
         else
 
 

@@ -15,7 +15,7 @@
    />
 
 
-   <!-- 1 RED x100-->
+   <!-- RED x100    0 => "223, 0 ,0" af0000 -->
 
    <view id="10" viewBox="100 0 100 100" />
    <rect x="100" y="0" width="100" height="100" fill="#ff0000" />
@@ -54,7 +54,7 @@
    <rect x="100" y="1000" width="200" height="100" fill="none" />
    <rect x="105" y="1011" width="190" height="90" fill="#af0000" />
 
-   <!-- 2  BLUE x300-->
+   <!-- BLUE x300    1 => "0, 0, 223" 0000af -->
 
    <view id="20" viewBox="300 0 100 100" />
    <rect x="300" y="0" width="100" height="100" fill="none" />
@@ -92,13 +92,6 @@
    <circle cx="356" cy="741" r="36" fill="#0000af" />
    <circle cx="356" cy="859" r="36" fill="#0000af" />
 
-
-   <!-- qbert kill     margin-left:-4px;
-
-   <view id="27" viewBox="300-40==260 900 200 100" />
-   <view id="28" viewBox="300-40==260 1000 200 100" />
--->
-
    <view id="27" viewBox="300 900 200 100" />
    <rect x="300" y="900" width="200" height="100" fill="none" />
    <rect x="340" y="920" width="120" height="72" fill="#0000ff" />
@@ -112,7 +105,7 @@
    <circle cx="460" cy="1056" r="36" fill="#0000af" />
 
 
-   <!-- 3 GREEN x500-->
+   <!-- GREEN x500    2 => "0, 223 ,0" 00af00 -->
 
    <view id="30" viewBox="500 0 100 100" />
    <rect x="500" y="0" width="100" height="100" fill="none" />
@@ -151,7 +144,22 @@
    <polygon points="556,860      599,750    512,750" fill="#00af00" />
    <polygon points="556,760      599,850    512,850" fill="#00af00" />
 
-   <!-- 4 YELLOW x700-->
+
+   <view id="37" viewBox="500 900 200 100" />
+   <rect x="500" y="900" width="200" height="100" fill="none" />
+   <rect x="554" y="980" width="92" height="20" fill="white" />
+   <polygon points="600,1000     600,914     695,957" fill="#00ff00" />
+   <polygon points="600,1000     600,914     505,957" fill="#00ff00" />
+
+
+   <view id="38" viewBox="500 1000 200 100" />
+   <rect x="500" y="1000" width="200" height="100" fill="none" />
+   <rect x="554" y="1080" width="92" height="20" fill="white" />
+   <polygon points="600,1100     600,1014     695,1057" fill="#00af00" />
+   <polygon points="600,1100     600,1014     505,1057" fill="#00af00" />
+
+
+   <!-- YELLOW x700    3 => "223, 223 ,0" dfdf00 -->
 
    <view id="40" viewBox="700 0 100 100" />
    <rect x="700" y="0" width="100" height="100" fill="#ffff00" />
@@ -181,7 +189,17 @@
    <rect x="700" y="700" width="100" height="200" fill="none" />
    <rect x="711" y="705" width="90" height="190" fill="#dfdf00" />
 
-   <!-- 5 PINK x900-->
+
+   <view id="47" viewBox="700 900 200 100" />
+   <rect x="700" y="900" width="200" height="100" fill="none" />
+   <rect x="705" y="911" width="190" height="90" fill="#ffff00" />
+
+   <view id="48" viewBox="700 1000 200 100" />
+   <rect x="700" y="1000" width="200" height="100" fill="none" />
+   <rect x="705" y="1011" width="190" height="90" fill="#dfdf00" />
+
+
+   <!-- PINK x900     4 => "229, 107 ,134" E56B86-->
 
    <view id="50" viewBox="900 0 100 100" />
    <rect x="900" y="0" width="100" height="100" fill="none" />
@@ -231,7 +249,7 @@
    <circle cx="1060" cy="1046" r="36" fill="#E56B86" />
 
 
-   <!-- 6 ORANGE x1100-->
+   <!-- ORANGE x1100    5 => "223, 143 , 0" df8f00 -->
 
    <view id="60" viewBox="1100 0 100 100" />
    <rect x="1100" y="0" width="100" height="100" fill="none" />
@@ -274,7 +292,7 @@
    <polygon points="1156,760      1199,850    1112,850" fill="#df8f00" />
 
 
-   <!-- 7 Cyan x1300-->
+   <!-- Cyan x1300    6 => "0, 223 ,223" 00dfdf -->
    <view id="70" viewBox="1300 0 100 100" />
    <rect x="1300" y="0" width="100" height="100" fill="#00ffff" />
 
@@ -305,7 +323,17 @@
    <rect x="1300" y="1300" width="100" height="200" fill="none" />
    <rect x="1311" y="705" width="90" height="190" fill="#00dfdf" />
 
-   <!-- 8 PURPLE x1500 -->
+
+   <view id="77" viewBox="1300 900 200 100" />
+   <rect x="1300" y="900" width="200" height="100" fill="none" />
+   <rect x="1305" y="911" width="190" height="90" fill="#00ffff" />
+
+   <view id="78" viewBox="1300 1000 200 100" />
+   <rect x="1300" y="1000" width="200" height="100" fill="none" />
+   <rect x="1305" y="1011" width="190" height="90" fill="#00dfdf" />
+
+
+   <!-- PURPLE x1500    7 => "143, 0, 223" 8f00df -->
    <view id="80" viewBox="1500 0 100 100" />
    <rect x="1500" y="0" width="100" height="100" fill="none" />
    <circle cx="1556" cy="56" r="36" fill="#af00ff" />
@@ -354,7 +382,7 @@
    <circle cx="1660" cy="1046" r="36" fill="#8f00df" />
 
 
-   <!-- 9 Deep Sky x1700 -->
+   <!-- Deep Sky x1700    8 => "0, 143 ,223" 008fdf -->
    <view id="90" viewBox="1700 0 100 100" />
    <rect x="1700" y="0" width="100" height="100" fill="none" />
    <polygon points="1756,10      1799,99    1712,99" fill="#00afff" />

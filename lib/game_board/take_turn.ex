@@ -1,6 +1,6 @@
 defmodule StartBoard do
-  defstruct width_game: 2,
-   height_game: 3, 
+  defstruct board_width: 2,
+   board_height: 3, 
    board_walls: []
 end
 
@@ -9,9 +9,9 @@ end
   defmodule ServerBoard do
     use Norm
 
-    defstruct width_game: 44,
-              height_game: 44,
-              empty_xys_game: MapSet.new([{0, 0}, {0, 1}, {1, 0}, {1, 1}]),
+    defstruct board_width: 44,
+              board_height: 44,
+              board_empty_xys: MapSet.new([{0, 0}, {0, 1}, {1, 0}, {1, 1}]),
               board_fronts: %{"1" => MapSet.new([]), "jill" => {0, 0}, "bob" => {3, 3}},
               board_rumps: %{"1" => MapSet.new([]), "jill" => {0, 0}, "bob" => {3, 3}},
               board_walls: MapSet.new([{1, 1}, {2, 1}]),
@@ -59,7 +59,7 @@ defmodule TakeTurn do
     prev_jumps = prev_board.board_jumps
     prev_leaps = prev_board.board_leaps
     prev_plots = prev_board.board_snakes_xys
-    prev_empty = prev_board.empty_xys_game
+    prev_empty = prev_board.board_empty_xys
 
     snake_front = snake_change.change_front
     snake_id = snake_change.change_id
@@ -87,7 +87,7 @@ defmodule TakeTurn do
 
     next_board = %ServerBoard{
       prev_board
-      | :empty_xys_game => next_emptys,
+      | :board_empty_xys => next_emptys,
         :board_fronts => next_fronts,
         :board_rumps => next_rumps,
                 :board_deads => next_deads,     

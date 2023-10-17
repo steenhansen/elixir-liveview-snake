@@ -14,13 +14,13 @@ defmodule CssCalc do
             to { transform: rotate(359deg); }
           }
 
-/*  html_rotate 0 on die */
+          /*  data_rotate 0 on die */
 
 
           #rotator_nesw {
-            width: <%= @html_w_px %>px;
-            height: <%= @html_h_px %>px;
-             animation: rotation  <%= @html_rotate %>s infinite linear;
+            width: <%= @data_w_px %>px;
+            height: <%= @data_h_px %>px;
+             animation: rotation  <%= @data_rotate %>s infinite linear;
             transform-origin: center;
             background-position: center;
             overflow: hidden;
@@ -32,9 +32,9 @@ defmodule CssCalc do
           }
 
           #rotator_squares {
-            width: <%= @html_w_px %>px;
-            height: <%= @html_h_px %>px;
-            animation: rotation  <%= @html_rotate %>s infinite linear;
+            width: <%= @data_w_px %>px;
+            height: <%= @data_h_px %>px;
+            animation: rotation  <%= @data_rotate %>s infinite linear;
             transform-origin: center;
             background-position: center;
             position: absolute;
@@ -42,15 +42,15 @@ defmodule CssCalc do
             }
 
           #_board {
-            width:  <%= @html_w_px %>px;
-            height: <%= @html_h_px %>px;
+            width:  <%= @data_w_px %>px;
+            height: <%= @data_h_px %>px;
             position: absolute;
           }
 
           #rotator_hash {
-            width: <%= @rotate_w_px %>px;
-            height: <%= @rotate_h_px %>px;
-            animation: rotation  <%= @html_rotate %>s infinite linear;
+            width: <%= @data_rot_w_px %>px;
+            height: <%= @data_rot_h_px %>px;
+            animation: rotation  <%= @data_rotate %>s infinite linear;
             transform-origin: center;
             background-position: center;
             overflow: hidden;
@@ -60,15 +60,15 @@ defmodule CssCalc do
           }
 
        img{
-            width: <%= @html_tile_px %>px;
-            height: <%= @html_tile_px %>px;
+            width: <%= @data_tile_px %>px;
+            height: <%= @data_tile_px %>px;
             float: left;
             position: relative;
         }
 
           ._row {
-            width:  <%= @html_w_px %>px;
-            height: <%= @html_rows %>px;
+            width:  <%= @data_w_px %>px;
+            height: <%= @data_rows %>px;
             position: relative;
           }
 

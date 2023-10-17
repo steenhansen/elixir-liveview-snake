@@ -47,13 +47,13 @@ defmodule RobotPlayer do
     end
   end
 
-  def start_link(start) do
-    GenServer.start_link(RobotPlayer, start)
+  def start_link(start, snake_length) do
+    GenServer.start_link(RobotPlayer, {start, snake_length})
   end
 
-  def init(init_snake) do
+  def init({init_snake, snake_length}) do
     init_pixel = {init_snake.start_x, init_snake.start_y}
-    init_snake_xys_list = PlayerSnake.initSnake(init_pixel)
+    init_snake_xys_list = PlayerSnake.initSnake(init_pixel, snake_length)
 
     robot_snake = %RobotSnake{
       robot_directions: init_snake.start_directions,
@@ -70,13 +70,79 @@ defmodule RobotPlayer do
     GenServer.call(pid, {:snakeId})
   end
 
+
+
+  #
+
+  def moveSnake2(robot_snake, pid_board) do
+    snake_id = Integer.to_string(robot_snake.robot_number)
+    head_direction = Enum.at(robot_snake.robot_directions, 0)
+    if robot_snake.snake_dead do
+      robot_snake
+    else
+      [board_width, board_height] = GameBoard.board_size(pid_board)
+      [new_rump | new_body] = robot_snake.snake_xys_list
+      {x_front, y_front} = robot_snake.snake_front
+
+      new_front =
+        case head_direction do
+          "up" -> PlayerSnake.moveUp(x_front, y_front, board_height)
+          "right" -> PlayerSnake.moveRight(x_front, y_front, board_width)
+          "down" -> PlayerSnake.moveDown(x_front, y_front, board_height)
+          "left" -> PlayerSnake.moveLeft(x_front, y_front, board_width)
+        end
+      new_snake_xys_list = new_body ++ [new_front]
+      the_moved_snake = %{
+        robot_snake
+        | snake_front: new_front,
+          snake_rump: new_rump,
+          snake_xys_list: new_snake_xys_list
+      }
+
+      robot_change = %RobotChange{
+        change_front: new_front,
+        change_id: snake_id,
+        change_rump: new_rump,
+        change_dead: false
+      }
+      ran_into = GameBoard.snake2Board(pid_board, robot_change)
+      if ran_into == "no_crash" do
+        _moved_snake = %{
+          the_moved_snake
+          | snake_dead: false
+        }
+      else
+        _moved_snake = %{
+          the_moved_snake
+          | snake_dead: true
+        }
+      end
+    end
+  end
+
+
+  def jumpSnake(pid_snake, pid_board) do
+    GenServer.call(pid_snake, {:jumpSnake, pid_board})
+  end
+
+
+  def winnerHead(pid_snake) do
+    GenServer.call(pid_snake, {:winnerHead})
+  end
   def handle_call({:snakeId}, _, snake) do
     robot_number = snake.robot_number
     snake_id = Integer.to_string(robot_number)
     {:reply, snake_id, snake}
   end
+  def handle_call({:winnerHead}, _from, robot_snake) do
+    if robot_snake.snake_dead do
+      {:reply, false, robot_snake}
+    else
+      {:reply, robot_snake.snake_front, robot_snake}
+    end
+  end
 
-  #
+
 
   def handle_call({:jumpSnake, pid_board}, _from, robot_snake) do
     [head_direction | smaller_directions] = robot_snake.robot_directions
@@ -118,72 +184,6 @@ defmodule RobotPlayer do
       end
     end
   end
-
-
-  def moveSnake2(robot_snake, pid_board) do
-    snake_id = Integer.to_string(robot_snake.robot_number)
-    head_direction = Enum.at(robot_snake.robot_directions, 0)
-    if robot_snake.snake_dead do
-      robot_snake
-    else
-      [width_game, height_game] = GameBoard.board_size(pid_board)
-      [new_rump | new_body] = robot_snake.snake_xys_list
-      {x_front, y_front} = robot_snake.snake_front
-
-      new_front =
-        case head_direction do
-          "up" -> PlayerSnake.moveUp(x_front, y_front, height_game)
-          "right" -> PlayerSnake.moveRight(x_front, y_front, width_game)
-          "down" -> PlayerSnake.moveDown(x_front, y_front, height_game)
-          "left" -> PlayerSnake.moveLeft(x_front, y_front, width_game)
-        end
-      new_snake_xys_list = new_body ++ [new_front]
-      the_moved_snake = %{
-        robot_snake
-        | snake_front: new_front,
-          snake_rump: new_rump,
-          snake_xys_list: new_snake_xys_list
-      }
-
-      robot_change = %RobotChange{
-        change_front: new_front,
-        change_id: snake_id,
-        change_rump: new_rump,
-        change_dead: false
-      }
-      ran_into = GameBoard.snake2Board(pid_board, robot_change)
-      if ran_into == "no_crash" do
-        _moved_snake = %{
-          the_moved_snake
-          | snake_dead: false
-        }
-      else
-        _moved_snake = %{
-          the_moved_snake
-          | snake_dead: true
-        }
-      end
-    end
-  end
-
-
-  def jumpSnake(pid_snake, pid_board) do
-    GenServer.call(pid_snake, {:jumpSnake, pid_board})
-  end
-
-
-  def winnerHead(pid_snake) do
-    GenServer.call(pid_snake, {:winnerHead})
-  end
-
-  def handle_call({:winnerHead}, _from, robot_snake) do
-    if robot_snake.snake_dead do
-      {:reply, false, robot_snake}
-    else
-      {:reply, robot_snake.snake_front, robot_snake}
-    end
-  end
-
 
 
 end

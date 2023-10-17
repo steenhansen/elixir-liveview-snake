@@ -11,9 +11,9 @@ defmodule HtmlRow do
          #p_1_1 { visibility: hidden; position: absolute; z-index:12; }
          #p_1_2 { visibility: hidden; position: absolute; z-index:12; }
          #p_1_3 { visibility: hidden; position: absolute; z-index:12; }
-      So the first image in every div is set to class="no-jump"
-       Then when jumping the class is cleared, and thus visible via image tag css
-       """
+          So the first image in every div is set to class="no-jump"
+           Then when jumping the class is cleared, and thus visible via image tag css
+  """
 
   def render(assigns) do
 

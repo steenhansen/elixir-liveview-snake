@@ -1,4 +1,7 @@
 defmodule MatrixGrid do
+     use Norm
+
+
   @doc since: """
          walled_matrix = %{{0, 0} => 0, {0, 1} => 0,          # NEW WAY 4  
                            {1, 0} => 0, {1, 1} => 1,
@@ -37,7 +40,7 @@ defmodule MatrixGrid do
 
             {xy_coord, m_xySvgCss}
         else
-          m_xySvgCss = %XySvgCss{svg_index: color_0_1, css_jump: "no-jump"}
+          m_xySvgCss = %XySvgCss{svgCss_icon_ind: color_0_1, svgCss_css_jump: "no-jump"}
           {xy_coord, m_xySvgCss}
         end
       end)
@@ -47,22 +50,39 @@ defmodule MatrixGrid do
   end
 
   @doc since: """
-          width_game = 1               #NEW WAY 1 == NEW WAY 2 !!!!!!!!!
-          height_game = 1 
+          board_width = 1               #NEW WAY 1 == NEW WAY 2 !!!!!!!!!
+          board_height = 1 
           all_empty =
-             for x <- 0..width_game,
-                 y <- 0..height_game,
+             for x <- 0..board_width,
+                 y <- 0..board_height,
                  into: Map.new(),
                  do: {{x, y}, 0}
        MapSet.new([{{0, 0}, 0}, {{0, 1}, 0}, {{1, 0}, 0}, {{1, 1}, 0}])
        """
-  def emptyMatrix(width_game, height_game) do
-    all_empty =
-      for x <- 0..width_game,
-          y <- 0..height_game,
-          into: MapSet.new(),
-          do: {x, y}
+         #@contract rgb_to_hex(r :: rgb(), g :: rgb(), b :: rgb()) :: hex()
+# all_empty = %{
+#   {38, 2} => %XySvgCss{svgCss_icon_ind: 0, svgCss_css_jump: "no-jump"}
 
+  def emptyMatrix(board_width, board_height) do
+
+#      user_schema = Norm.schema(%{
+        
+#      svgCss_icon_ind: spec(is_integer()),
+#      svgCss_css_jump: spec(is_binary() and &(&1 > 0))
+#  })
+
+
+
+    all_empty =
+      for x <- 0..board_width,
+          y <- 0..board_height,
+          into: MapSet.new(),
+          do: {x, y}   
+# dbg("barddddddddddddddddddddddddddd")
+# nc = Norm.conform!(123, spec(is_integer() and &(&1 > 0)))
+# dbg(user_schema)
+# nc2 = Norm.conform!(all_empty, coll_of( spec(Map.is_map)))
+# dbg(nc2)
     all_empty
   end
 
@@ -99,8 +119,8 @@ defmodule MatrixGrid do
 
   def asciiBoard(players_matrix, current_board) do
     as_lists =
-      for y <- 0..current_board.height_game, into: [] do
-        for x <- 0..current_board.width_game do
+      for y <- 0..current_board.board_height, into: [] do
+        for x <- 0..current_board.board_width do
           players_matrix[y][x]
         end
       end
@@ -124,6 +144,6 @@ defmodule MatrixGrid do
         end
       )
 
-    _ascii_board
+   # _ascii_board
   end
 end
