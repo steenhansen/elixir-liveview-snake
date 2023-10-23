@@ -1,9 +1,7 @@
-
-
 defmodule MiscRoutines do
-   use MultiGameWeb, :live_component
+  use MultiGameWeb, :live_component
 
-     @doc since: """
+  @doc since: """
        """
 
   def getColors(m_the_data_rows_svg_inds, size_board_hor) do
@@ -32,8 +30,7 @@ defmodule MiscRoutines do
       |> Map.new()
   end
 
-
- def getIcons(the_data_rows_svg_inds, size_board_hor) do
+  def getIcons(the_data_rows_svg_inds, size_board_hor) do
     columns_current = TheConsts.c_max_hor() - 1
 
     _icons =
@@ -88,22 +85,41 @@ defmodule MiscRoutines do
       |> Map.new()
   end
 
- def drawBoard(
-        {user_name, pid_board, data_pid_tick, players_matrix, new_scale, scale_x_px,
-         scale_y_px, rotation_speed, seq_game_sizes}
+
+  def getDeadOpacity(is_snake_dead)do
+    if is_snake_dead do
+      0.3
+    else
+      1
+    end
+
+  end
+
+  def drawBoard(
+        {user_pid, pid_board, data_pid_tick, players_matrix, new_scale, scale_x_px, scale_y_px,
+         rotation_speed, seq_game_sizes, is_snake_dead, is_freezing}
       ) do
     max_hv_size = TheConsts.c_max_hor()
     players_data_rows_svg_inds = ListToXy.makeAllRows(players_matrix, max_hv_size, max_hv_size)
-    the_colors = GameBoard.board_colors(pid_board)
-    this_color = the_colors[user_name]
+    the_colors = GameBoard.boardColors(pid_board)
+    this_color = the_colors[user_pid]
+
     opacity_jump_2 = Map.replace(TheConsts.c_init_opacity_0(), this_color - 1, 1)
     user_rgb = TheConsts.c_convert_color_id_to_rgb()[this_color - 1]
     da_colors = MiscRoutines.getColors(players_data_rows_svg_inds, seq_game_sizes.size_board_hor)
-    data_rows_jump_inds = MiscRoutines.getIcons(players_data_rows_svg_inds, seq_game_sizes.size_board_hor)
-    da_jumps = MiscRoutines.getJumps(players_data_rows_svg_inds)
 
+    data_rows_jump_inds =
+      MiscRoutines.getIcons(players_data_rows_svg_inds, seq_game_sizes.size_board_hor)
+
+    da_jumps = MiscRoutines.getJumps(players_data_rows_svg_inds)
+        control_opacity = MiscRoutines.getDeadOpacity(is_snake_dead)
+
+
+      data_zooming = if is_freezing, do: "hidden", else: "visible"
     html_data = %HtmlData{
       pid_board: pid_board,
+      data_snake_dead: control_opacity,
+      data_pid_tick: data_pid_tick,
       data_rotate: rotation_speed,
       data_tile_px: TheConsts.c_tile_pixels(),
       data_rows: TheConsts.c_tile_pixels(),
@@ -117,37 +133,34 @@ defmodule MiscRoutines do
       data_rows_svg_inds: da_colors,
       data_rows_jump_inds: data_rows_jump_inds,
       data_jump_classes: da_jumps,
-      data_pid_tick: data_pid_tick,
+
       data_jump_opacity: opacity_jump_2,
-      data_colors: user_rgb
+      data_zooming: data_zooming,
+      data_colors: user_rgb         # data_colors => data_rgb_color
     }
 
     html_data
   end
 
 
+
+
+  def get_maxRobots(game_name) do
+
+        current_players = CollectParticipants.get_participants(game_name)
+     current_players = Enum.map(current_players, fn {_pid_user, person_name} -> person_name end)
+
+     amount_users = length(current_players)
+      amount_robots = 9 - amount_users
+
+    amount_robots
+end
+
+
+
   def render(assigns) do
-      ~H"""
-      ...
-      """
-    end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    ~H"""
+    ...
+    """
+  end
 end

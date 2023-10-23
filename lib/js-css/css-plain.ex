@@ -20,7 +20,7 @@ defmodule CssPlain do
 
       <style >
          #nesw-spacer {
-        height:300px; 
+        height:600px; 
         visibility:hidden;
         }
 
@@ -29,12 +29,7 @@ defmodule CssPlain do
            margin-left:84px;
         }
 
-       #nesw {
-        left:200px;
-        clear:both; 
-        visibility:hidden; 
-        position:relative
-        }
+
 
 
          #jump-0 {

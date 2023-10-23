@@ -1,8 +1,3 @@
-defmodule XySvgCss do
-  # red body 
-  defstruct svgCss_icon_ind: 12,
-            svgCss_css_jump: "no-jump"
-end
 
 defmodule BoardSnakePosition do
   def snake_to_board(current_board) do
@@ -12,7 +7,6 @@ defmodule BoardSnakePosition do
       MatrixGrid.emptyMatrix(current_board.board_width, current_board.board_height)
       |> MatrixGrid.walledMatrix(current_board.board_walls)
       |> MatrixGrid.snakesToMatrix(m_snakes_pixels)
-#dbg(m_current_matrix)
     {:reply, m_current_matrix, current_board}
   end
 
@@ -26,13 +20,13 @@ defmodule BoardSnakePosition do
     hit_other_snake = SnakeDraw.hit_snake?(snake_change, board_empty_xys, board_snakes_xys)
 
     if length(hit_other_snake) > 0 do
-      TakeTurn.snake_crashed(hit_other_snake, current_board, snake_change.change_id)
+      TakeTurn.snake_crashed(hit_other_snake, current_board, snake_change.change_pid_user)
     else
       hit_wall = MapSet.member?(board_walls, snake_change.change_front)
       snake_not_jump = snake_change.change_jump == 0
 
       if hit_wall and snake_not_jump do
-        TakeTurn.hit_a_wall(current_board, snake_change.change_id)
+        TakeTurn.hit_a_wall(current_board, snake_change.change_pid_user)
       else
         front_empty = MapSet.member?(board_empty_xys, snake_change.change_front)
 

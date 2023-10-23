@@ -11,7 +11,7 @@ defmodule HtmlNESW do
     ~H"""
 
      <div id="nesw" style="clear:both; visibility:hidden; position:relative" class="XXXXflex-grid" >
-                  <div class="" >
+                  <div id="nesw-zoom" >
     <div class=""  >
 
 
@@ -43,12 +43,12 @@ defmodule HtmlNESW do
         </div>
         <div   id="jump-man" 
         
-        onmousedown = ' window.live_hooks.pushEvent("key-jump");  '
+                    onmousedown = 'tryJump()'
                     onmouseenter = 'enterJump()'   
                     onmouseleave = 'leaveJump()'
         >
 
-            <div   
+            <div   id="inside-jump"
                     >
 
 

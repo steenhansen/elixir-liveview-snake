@@ -4,6 +4,8 @@ defmodule CssCalc do
   use MultiGameWeb, :live_component
 
   def render(assigns) do
+
+ 
     ~H"""
     <div>
 
@@ -16,6 +18,10 @@ defmodule CssCalc do
 
           /*  data_rotate 0 on die */
 
+
+          #nesw-zoom {
+            visibility: <%= @data_zooming %>;
+          }
 
           #rotator_nesw {
             width: <%= @data_w_px %>px;
@@ -56,7 +62,12 @@ defmodule CssCalc do
             overflow: hidden;
             position: absolute;
             background-image: url('/images/matrix-mesh.svg');     
-            border: solid 1px;
+            border: solid 1px rgb(<%= @data_colors %>);
+          }
+
+          #user-moniker {
+              margin-right:6px;
+            color: rgb(<%= @data_colors %>);
           }
 
        img{

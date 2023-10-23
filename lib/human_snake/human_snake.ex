@@ -1,36 +1,3 @@
-defmodule HumanSnake do
-  defstruct human_direction: "up",
-            human_name: "human_nameX",
-            snake_front: {-1, -1},
-            snake_rump: {7, 11},
-            snake_xys_list: [],
-            snake_dead: false,
-            human_jump: 0,
-            human_leap: Map.new(),
-            game_name: "game-name"
-end
-
-defmodule HumanChange do
-  defstruct change_front: {1, 2},
-            change_rump: {3, 4},
-            change_id: "1",
-            change_dead: false,
-            change_jump: 0,
-            change_leap: %{{1, 0} => %{"slice_vertical" => false, "slice_start" => false}}
-end
-
-defmodule HumanStart do
-  defstruct game_name: "game-name",
-            start_direction: "up",
-            start_name: "human_name",
-            start_x: 3,
-            start_y: 4
-end
-
-defmodule JumpSlice do
-  defstruct slice_vertical: false,
-            slice_start: false
-end
 
 defmodule HumanPlayer do
   @behaviour SnakePlayer
@@ -41,20 +8,21 @@ defmodule HumanPlayer do
     GenServer.start_link(HumanPlayer, {start, snake_length})
   end
 
-  def init({init_snake, snake_length}) do
-    init_pixel = {init_snake.start_x, init_snake.start_y}
-    init_snake_xys_list = PlayerSnake.initSnake(init_pixel, snake_length)
+  def init({init_human, snake_length}) do
+    init_pixel = {init_human.start_x, init_human.start_y}
+    init_human_xys_list = PlayerSnake.initSnake(init_pixel, snake_length)
 
     human_snake = %HumanSnake{
-      human_direction: init_snake.start_direction,
-      human_name: init_snake.start_name,
+      human_direction: init_human.start_direction,
+      human_name: init_human.start_name,
       snake_front: init_pixel,
       snake_rump: nil,
-      snake_xys_list: init_snake_xys_list,
+      snake_xys_list: init_human_xys_list,
       snake_dead: false,
       human_jump: 0,
       human_leap: Map.new(),
-      game_name: init_snake.game_name
+      human_pid_user: init_human.pid_user,
+      game_name: init_human.game_name
     }
 
     {:ok, human_snake}
@@ -63,6 +31,20 @@ defmodule HumanPlayer do
   def jump_over(pid_snake) do
     GenServer.cast(pid_snake, {:jump_over})
   end
+
+    def snakeDead(pid) do
+    GenServer.call(pid, {:snakeDead})
+  end
+
+  
+
+  def snakeId(pid) do
+    GenServer.call(pid, {:snakeId})
+  end
+  def winnerHead(pid_snake) do
+    GenServer.call(pid_snake, {:winnerHead})
+  end
+
 
   def jumpSnake(pid_snake, pid_board) do
     GenServer.call(pid_snake, {:jumpSnake, pid_board})
@@ -104,9 +86,8 @@ defmodule HumanPlayer do
     {:noreply, jumping_snake}
   end
 
-  def snakeId(pid) do
-    GenServer.call(pid, {:snakeId})
-  end
+
+
 
 
 
@@ -145,7 +126,7 @@ defmodule HumanPlayer do
   end
 
   def moveSnake2(human_snake, pid_board) do
-    snake_id = human_snake.human_name
+    #snake_id = human_snake.human_name
     head_direction = human_snake.human_direction
     snake_jump = human_snake.human_jump
 
@@ -178,7 +159,7 @@ defmodule HumanPlayer do
 
       human_change = %HumanChange{
         change_front: new_front,
-        change_id: snake_id,
+        change_pid_user: human_snake.human_pid_user, # qbert
         change_rump: new_rump,
         change_dead: false,
         change_jump: snake_jump,
@@ -204,15 +185,12 @@ defmodule HumanPlayer do
     end
   end
 
-  def winnerHead(pid_snake) do
-    GenServer.call(pid_snake, {:winnerHead})
-  end
+
 
   def handle_call({:winnerHead}, _from, human_snake) do
     if human_snake.snake_dead do
       {:reply, false, human_snake}
     else
-    #  dbg({"winner 23423", human_snake})
       winner_name = human_snake.human_name
       winner_front = human_snake.snake_front
       snake_front_and_name = [winner_front, winner_name]
@@ -220,10 +198,6 @@ defmodule HumanPlayer do
     end
   end
 
-    def handle_call({:snakeId}, _, snake) do
-    snake_id = snake.human_name
-    {:reply, snake_id, snake}
-  end
 
  def handle_call({:jumpSnake, pid_board}, _from, human_snake) do
     human_jump = human_snake.human_jump
@@ -250,4 +224,21 @@ defmodule HumanPlayer do
       end
     end
   end
+
+
+
+     def handle_call({:snakeId}, _, snake) do
+    snake_id = snake.human_name
+    {:reply, snake_id, snake}
+  end
+
+    
+
+  def handle_call({:snakeDead}, _, snake) do
+    snake_dead = snake.snake_dead
+    {:reply, snake_dead, snake}
+  end
+
+
+
 end

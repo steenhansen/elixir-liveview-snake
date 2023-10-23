@@ -3,12 +3,16 @@ defmodule ConfigureGame do
     %MatchChosens{
       chosen_frames_per_sec: _chosen_frames_per_sec,
       chosen_rotate: _chosen_rotate,
+      chosen_length: _chosen_length,
       chosen_tile_width: chosen_tile_width,
       chosen_tile_height: chosen_tile_height,
       chosen_obstacles: _chosen_obstacles,
       chosen_computers: _chosen_computers
     } =
       seq_match_choices
+
+      size_count_x_off = trunc((chosen_tile_width - 10 )/2)-1
+      size_count_y_off = trunc((chosen_tile_height - 20 )/2)
 
     size_board_hor_px = chosen_tile_width * TheConsts.c_tile_pixels()
     size_board_ver_px = chosen_tile_height * TheConsts.c_tile_pixels()
@@ -29,6 +33,8 @@ defmodule ConfigureGame do
     seq_game_sizes = %GameSizes{
       size_board_hor: chosen_tile_width,
       size_board_ver: chosen_tile_height,
+      size_count_x_off: size_count_x_off,
+      size_count_y_off: size_count_y_off,
       size_board_hor_px: size_board_hor_px,
       size_board_ver_px: size_board_ver_px,
       size_last_hor: size_last_hor,

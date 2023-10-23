@@ -5,11 +5,15 @@ defmodule GameSteps do
     CollectParticipants.add_participant(game_name, user_name, pid_user)
     user_tab = user_name <> " : " <> game_name
 
-    live_user = MountEmpty.emptyUser(user_tab, user_name)
-    optional_selections = MountEmpty.emptyOptional()
-    seq_match_choices = MountEmpty.emptyChosens()
-    html_data = MountEmpty.emptyData()
+    live_user = %LiveUser{
+      user_tab: user_tab,
+      user_name: user_name,
+    }
 
+
+    optional_selections = %OptionalSelections{}
+    seq_match_choices = %MatchChosens{}
+    html_data = %HtmlData{}
     {game_name, live_user, optional_selections, seq_match_choices, html_data}
   end
 
@@ -20,20 +24,29 @@ defmodule GameSteps do
     %{"person-name" => _starter_person} = phx_value_person_name
     game_name = prev_socket.assigns.game_name
 
-    {:ok, data_pid_tick} =
-      TickMoment.start_link({game_name, seq_match_choices, seq_game_sizes, start_locations})
+    participants_live = CollectParticipants.get_participants(game_name)
 
-    TickMoment.begin_game(data_pid_tick)
+     number_users = Enum.count(participants_live)
+    if number_users > 0 do
+      CollectParticipants.clear_participants()
 
-    old_live_user = prev_socket.assigns.live_user
+      {:ok, data_pid_tick} =
+        TickMoment.start_link({game_name, seq_match_choices, seq_game_sizes, start_locations, participants_live})
 
-    new_live_user = %LiveUser{
-      old_live_user
-      | user_step: "step_2_load_html",
-        user_show_grid: false
-    }
+      TickMoment.begin_game(data_pid_tick)
 
-    {data_pid_tick, new_live_user}
+      old_live_user = prev_socket.assigns.live_user
+
+      new_live_user = %LiveUser{
+        old_live_user
+        | user_step: "step_2_load_html",
+          user_show_grid: false
+      }
+
+      {data_pid_tick, new_live_user}
+    else
+         {"already-started", prev_socket}
+    end
   end
 
   def stepCount(
@@ -46,12 +59,13 @@ defmodule GameSteps do
       ) do
     _db_start_ms = CalcPing.db_start_ms()
     rotation_speed = seq_match_choices.chosen_rotate
-    user_name = prev_socket.assigns.live_user.user_name
-
+    user_pid = self()
+   is_snake_dead = false
+   is_freezing = false
     html_data =
       MiscRoutines.drawBoard(
-        {user_name, pid_board, data_pid_tick, players_matrix, 1, "0px", "0px", rotation_speed,
-         seq_game_sizes}
+        {user_pid, pid_board, data_pid_tick, players_matrix, 1, "0px", "0px", rotation_speed,
+         seq_game_sizes, is_snake_dead, is_freezing}
       )
 
     old_live_user = prev_socket.assigns.live_user
@@ -71,21 +85,22 @@ defmodule GameSteps do
         players_matrix,
         seq_match_choices,
         seq_game_sizes,
-        seq_max_ping,
+        seq_max_ping,is_snake_dead,
         prev_socket
       ) do
+    
     old_max = prev_socket.assigns.seq_max_ping
 
     new_max = if(seq_max_ping > old_max, do: seq_max_ping, else: old_max)
 
     db_start_ms = CalcPing.db_start_ms()
-    user_name = prev_socket.assigns.live_user.user_name
+    user_pid = self()
     rotation_speed = seq_match_choices.chosen_rotate
-
+   is_freezing = false
     html_data =
       MiscRoutines.drawBoard(
-        {user_name, pid_board, data_pid_tick, players_matrix, 1, "0px", "0px", rotation_speed,
-         seq_game_sizes}
+        {user_pid, pid_board, data_pid_tick, players_matrix, 1, "0px", "0px", rotation_speed,
+         seq_game_sizes, is_snake_dead, is_freezing}
       )
 
     old_live_user = prev_socket.assigns.live_user
@@ -101,28 +116,29 @@ defmodule GameSteps do
         new_scale,
         scale_x_px,
         scale_y_px,
-        seq_game_sizes,
-        prev_socket
+        seq_game_sizes
       ) do
     rotation_speed = 0
-    user_name = prev_socket.assigns.live_user.user_name
-
+    user_pid = self()
+  is_snake_dead = false
+  is_freezing = true
     MiscRoutines.drawBoard(
-      {user_name, pid_board, data_pid_tick, players_matrix, new_scale, scale_x_px, scale_y_px,
-       rotation_speed, seq_game_sizes}
+      {user_pid, pid_board, data_pid_tick, players_matrix, new_scale, scale_x_px, scale_y_px,
+       rotation_speed, seq_game_sizes, is_snake_dead, is_freezing}
     )
   end
 
   def changeDirection(to_direction, socket) do
-    data_pid_tick = socket.assigns.data_pid_tick
-    starter_person = socket.assigns.live_user.user_name
-    TickMoment.snake_change_dir(data_pid_tick, starter_person, to_direction)
+    data_pid_tick = socket.assigns.html_data.data_pid_tick
+    pid_user = socket.root_pid
+    TickMoment.snake_change_dir(data_pid_tick, pid_user, to_direction)
   end
 
   def snakeJump(socket) do
-    data_pid_tick = socket.assigns.data_pid_tick
-    starter_person = socket.assigns.live_user.user_name
-    TickMoment.jump_over(data_pid_tick, starter_person)
+    data_pid_tick = socket.assigns.html_data.data_pid_tick
+    pid_user = socket.root_pid
+
+    TickMoment.jump_over(data_pid_tick, pid_user)
   end
 
   def collectPlayers(prev_socket) do
@@ -130,13 +146,14 @@ defmodule GameSteps do
     current_ms = CalcPing.ping_current_ms(utc_now)
     game_name = prev_socket.assigns.game_name
     current_players = CollectParticipants.get_participants(game_name)
-    current_players = Enum.map(current_players, fn {person_name, _pid} -> person_name end)
+    current_players = Enum.map(current_players, fn {_pid_user, person_name} -> person_name end)
     old_live_user = prev_socket.assigns.live_user
-
+    amount_robots =  MiscRoutines.get_maxRobots(game_name)
     %LiveUser{
       old_live_user
       | user_time_start: current_ms,
-        user_team: current_players
+        user_team: current_players,
+        user_max_robots: amount_robots
     }
   end
 

@@ -1,6 +1,37 @@
 defmodule MultiGameWeb.UserHtml do
   use MultiGameWeb, :live_view
 
+#   defmodule A do
+#     def my_inspect(error_term, err_message) do
+#       IO.puts(IO.ANSI.format([:yellow_background, :black, inspect(err_message)]))
+#       dbg(error_term, limit: :infinity)
+#     end
+#   end
+
+#   def terminate(reason, _state) do
+#     {quit_error, quit_location} = reason
+
+#     if quit_error != :shutdown do
+#       A.my_inspect(__MODULE__, "ERROR")
+#       A.my_inspect(quit_location, "LOCATION")
+#       {e_reason, e_error, current_data} = quit_error
+#       A.my_inspect(e_reason, e_error)
+#        current_data = slimifyLive(current_data)
+#       A.my_inspect(current_data, "slimmed-socket-data")
+#     end
+#   end
+
+# def slimifyLive(current_data) do
+#    # from https://dev.to/noelworden/so-many-ways-to-update-a-map-with-elixir-1aie
+#       cur_html_data = current_data.html_data
+#       cur_html_data = %{cur_html_data | data_rows_jump_inds: %{0 => %{0 => 0}}}
+#       cur_html_data = %{cur_html_data | data_jump_classes: %{0 => %{0 => "no-jump"}}}
+#       cur_html_data = %{cur_html_data | data_rows_svg_inds: %{0 => %{0 => 0}}}
+#       %{current_data | html_data: cur_html_data}
+
+# end
+
+
   def render(assigns) do
     RenderBoard.render(assigns)
   end
@@ -23,7 +54,6 @@ defmodule MultiGameWeb.UserHtml do
     {:noreply,
      assign(
        prev_socket,
-       # "brother-game2",
        game_name: prev_socket.assigns.game_name,
        live_user: new_live_user
      )}
@@ -33,7 +63,6 @@ defmodule MultiGameWeb.UserHtml do
     user_name = ended_socket.assigns.live_user.user_name
     game_name = ended_socket.assigns.game_name
     game_winner = ended_socket.assigns.game_winner
-    dbg(game_winner)
 
     if game_winner == user_name do
       game_count = "/" <> game_name <> "/" <> user_name <> "#Winner"
@@ -73,7 +102,6 @@ defmodule MultiGameWeb.UserHtml do
          scale_y_px, seq_game_sizes, winner_name},
         old_socket
       ) do
-    # dbg(winner_name)
     html_data =
       GameSteps.stepWinner(
         pid_board,
@@ -82,8 +110,7 @@ defmodule MultiGameWeb.UserHtml do
         new_scale,
         scale_x_px,
         scale_y_px,
-        seq_game_sizes,
-        old_socket
+        seq_game_sizes
       )
 
     new_socket =
@@ -120,13 +147,16 @@ defmodule MultiGameWeb.UserHtml do
         players_matrix,
         seq_match_choices,
         seq_game_sizes,
-        seq_max_ping
+        seq_max_ping, is_snake_dead
       ) do
-    GenServer.call(
-      pid_user,
-      {:send_board, pid_board, data_pid_tick, players_matrix, seq_match_choices, seq_game_sizes,
-       seq_max_ping}
-    )
+    xxx =
+      GenServer.call(
+        pid_user,
+        {:send_board, pid_board, data_pid_tick, players_matrix, seq_match_choices, seq_game_sizes,
+         seq_max_ping, is_snake_dead}
+      )
+
+    xxx
   end
 
   # @doc since: """
@@ -159,6 +189,7 @@ defmodule MultiGameWeb.UserHtml do
         prev_socket
       ) do
     new_live_user = GameSteps.isMobilePing(string_ping_ms, is_mobile, prev_socket)
+
 
     {:noreply,
      assign(prev_socket,
@@ -209,23 +240,71 @@ defmodule MultiGameWeb.UserHtml do
   def handle_event("start-game", phx_value_person_name, socket) do
     {data_pid_tick, new_live_user} = GameSteps.stepStart(phx_value_person_name, socket)
 
-    {:noreply,
-     assign(socket,
-       data_pid_tick: data_pid_tick,
-       live_user: new_live_user
-     )}
+    if data_pid_tick == "already-started" do
+      {:noreply, socket}
+    else
+      {:noreply,
+       assign(socket,
+         data_pid_tick: data_pid_tick,
+         live_user: new_live_user
+       )}
+    end
   end
 
+
+
+
+  def mount(params, _session, old_socket) do
+    Process.send_after(self(), {:step_1_collect_players}, 1000)
+    {game_name, live_user, optional_selections, seq_match_choices, html_data} =
+      GameSteps.stepMount(params, self())
+
+ #   user_names = params["path"]
+   # [game_name | [_user_name | _]] = user_names
+
+ amount_robots =  MiscRoutines.get_maxRobots(game_name)
+
+     
+
+    if amount_robots == 0 do
+      new_socket =
+        assign(old_socket,
+          game_name: game_name,
+          seq_max_ping: 17,
+          live_user: live_user,
+          optional_selections: %{optional_selections | select_computers: "computers-0"},
+          seq_match_choices: %{seq_match_choices | chosen_computers: 0},
+          html_data: html_data
+        )
+
+
+      {:ok, new_socket}
+    else
+      new_socket =
+        assign(old_socket,
+          game_name: game_name,
+          seq_max_ping: 17,
+          live_user: live_user,
+          optional_selections: %{optional_selections | select_computers: "computers-1"},
+          seq_match_choices: %{seq_match_choices | chosen_computers: 1},
+          html_data: html_data
+        )
+
+      {:ok, new_socket}
+    end
+  end
+
+
   def handle_call({:color_index, pid_board}, _from, old_socket) do
-    the_colors = GameBoard.board_colors(pid_board)
-    user_name = old_socket.assigns.live_user.user_name
-    this_color = the_colors[user_name]
+    the_colors = GameBoard.boardColors(pid_board)
+    pid_user = self()
+    this_color = the_colors[pid_user]
     {:reply, this_color, old_socket}
   end
 
   def handle_call(
         {:send_board, pid_board, data_pid_tick, players_matrix, seq_match_choices, seq_game_sizes,
-         seq_max_ping},
+         seq_max_ping, is_snake_dead},
         _from,
         old_socket
       ) do
@@ -236,9 +315,10 @@ defmodule MultiGameWeb.UserHtml do
         players_matrix,
         seq_match_choices,
         seq_game_sizes,
-        seq_max_ping,
+        seq_max_ping, is_snake_dead,
         old_socket
       )
+
 
     new_socket =
       assign(old_socket,
@@ -246,26 +326,10 @@ defmodule MultiGameWeb.UserHtml do
         live_user: new_live_user,
         html_data: html_data
       )
+    
 
     {:reply, cur_ping_time, new_socket}
   end
 
-  def mount(params, _session, old_socket) do
-    Process.send_after(self(), {:step_1_collect_players}, 1000)
 
-    {game_name, live_user, optional_selections, seq_match_choices, html_data} =
-      GameSteps.stepMount(params, self())
-
-    new_socket =
-      assign(old_socket,
-        game_name: game_name,
-        seq_max_ping: 17,
-        live_user: live_user,
-        optional_selections: optional_selections,
-        seq_match_choices: seq_match_choices,
-        html_data: html_data
-      )
-
-    {:ok, new_socket}
-  end
 end

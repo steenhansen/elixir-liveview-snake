@@ -58,12 +58,11 @@ defmodule GameBoard do
     GenServer.call(pid_board, {:board_size})
   end
 
-  def board_colors(pid_board) do
+  def boardColors(pid_board) do
     ### this should be an info
-    GenServer.call(pid_board, {:board_colors})
+    GenServer.call(pid_board, {:boardColors})
   end
 
-  ################### s
   def place_robot(pid_board, a_number) do
     GenServer.cast(pid_board, {:place_robot, a_number})
   end
@@ -72,8 +71,8 @@ defmodule GameBoard do
     GenServer.call(pid_board, {:snake2Board, snake_change})
   end
 
-  def place_player(pid_board, a_name) do
-    GenServer.cast(pid_board, {:place_player, a_name})
+  def place_player(pid_board, pid_user) do
+    GenServer.cast(pid_board, {:place_player, pid_user})
   end
 
   def ascii_print(pid, players_matrix) do
@@ -84,28 +83,15 @@ defmodule GameBoard do
     _a = SnakeDraw.robot_to_board({:place_robot, a_number}, prev_board)
   end
 
-  def handle_cast({:place_player, a_name}, prev_board) do
-    _a = SnakeDraw.human_to_board({:place_player, a_name}, prev_board)
+  def handle_cast({:place_player, pid_user}, prev_board) do
+    _a = SnakeDraw.human_to_board({:place_player, pid_user}, prev_board)
   end
 
-  ###############################
-
-  def handle_call({:board_colors}, _from, prev_board) do
+  def handle_call({:boardColors}, _from, prev_board) do
     the_colors = prev_board.board_colors
     {:reply, the_colors, prev_board}
   end
 
-  def handle_call({:players_alive}, _from, prev_board) do
-    players_killed =
-      Enum.count(
-        prev_board.board_deads,
-        fn {_key, val} -> val == true end
-      )
-
-    players_total = Enum.count(prev_board.board_ids)
-    players_left = players_total - players_killed
-    {:reply, players_left, prev_board}
-  end
 
   def handle_call({:board_size}, _from, prev_board) do
     board_size = [prev_board.board_width, prev_board.board_height]
@@ -119,20 +105,16 @@ defmodule GameBoard do
   end
 
   def handle_call({:snake2Board, snake_change}, _from, prev_board) do
-    a = BoardSnakePosition.move_snake({:snake2Board, snake_change}, prev_board)
-    #  {:reply, what_did_hit, prev_board} = a
-    a
+    return = BoardSnakePosition.move_snake({:snake2Board, snake_change}, prev_board)
+    #  {:reply, what_did_hit, prev_board} = return
+    return
   end
-
-  ############
 
   def handle_call({:snake_matrix}, _from, prev_board) do
-    a = BoardSnakePosition.snake_to_board(prev_board)
-    #  {:reply, current_matrix, prev_board} = a
-    a
+    return = BoardSnakePosition.snake_to_board(prev_board)
+    return
   end
 
-  ###############
 
   def handle_call({:free_square}, _from, current_board) do
     empty_xys = current_board.board_empty_xys
@@ -140,4 +122,20 @@ defmodule GameBoard do
 
     {:reply, first_emtpy, current_board}
   end
+
+
+  
+  def handle_call({:players_alive}, _from, prev_board) do
+    players_killed =
+      Enum.count(
+        prev_board.board_deads,
+        fn {_key, val} -> val == true end
+      )
+
+    players_total = Enum.count(prev_board.board_ids)
+    players_left = players_total - players_killed
+    {:reply, players_left, prev_board}
+  end
+
+  
 end

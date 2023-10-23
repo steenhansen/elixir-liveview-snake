@@ -1,12 +1,14 @@
 defmodule FormSelections do
   def userChoices(phx_validate) do
+
     %{
       "_target" => _target,
       "select_speed" => select_speed,
       "select_rotate" => select_rotate,
       "select_length" => select_length,
       "select_surface" => select_surface,
-      "select_computers" => select_computers
+      "select_computers" => select_computers,
+      "select_movement" => select_movement
     } =
       phx_validate
 
@@ -23,6 +25,23 @@ defmodule FormSelections do
         "speed-slow" -> TheConsts.c_speed_slow_12_5_a_sec()
       end
 
+
+
+
+
+    %{"radio-movement" => movement_selection} = select_movement
+
+  #  movement_type = movement_selection
+    # movement_type = 
+    #   case movement_selection do
+    #     "movement-simple" -> TheConsts.c_length_long()
+    #     "movement-average" -> TheConsts.c_length_medium()
+    #     "movement-complex" -> TheConsts.c_length_short()
+    #   end
+
+
+
+
     %{"radio-length" => length_selection} = select_length
 
     snake_length =
@@ -32,14 +51,19 @@ defmodule FormSelections do
         "length-short" -> TheConsts.c_length_short()
       end
 
+
+
+
+
+
     %{"radio-surface" => surface_selection} = select_surface
 
     surface_x_y =
       case surface_selection do
-        "surface-large" -> {44, 44}           # SURFACE-LARGE
-        "surface-small" -> {12, 12}
-        "surface-rectangle" -> {12, 44}
-        "surface-obstacles" -> {44, 44}
+        "surface-large" -> TheConsts.c_large_board()    #{44, 44}           # SURFACE-LARGE
+        "surface-small" -> TheConsts.c_small_board()   #{22, 22}
+        "surface-rectangle" -> TheConsts.c_rectangle_board()       #{12, 44}
+        "surface-obstacles" -> TheConsts.c_obstacle_board() #       {44, 44}
       end
 
     {tile_width, tile_height} = surface_x_y
@@ -49,7 +73,8 @@ defmodule FormSelections do
         "surface-large" -> [{}]
         "surface-small" -> [{}]
         "surface-rectangle" -> [{}]
-        "surface-obstacles" -> [{21,21}, {1,1}, {42,1}, {42,42}, {1,42}]   # test here
+#        "surface-obstacles" -> [{21,21}, {1,1}, {42,1}, {42,42}, {1,42}]   # test here
+        "surface-obstacles" -> TheConsts.c_large_obstacles()
       end
 
     %{"radio-computers" => computer_selection} = select_computers
@@ -74,7 +99,8 @@ defmodule FormSelections do
       chosen_tile_width: tile_width,
       chosen_tile_height: tile_height,
       chosen_obstacles: obstacle_x_y,
-      chosen_computers: number_computers
+      chosen_computers: number_computers,
+      chosen_movement: movement_selection
     }
 
     optional_selections = %OptionalSelections{
@@ -82,7 +108,8 @@ defmodule FormSelections do
       select_rotate: rotation_selection,
       select_length: length_selection,
       select_surface: surface_selection,
-      select_computers: computer_selection
+      select_computers: computer_selection,
+      select_movement: movement_selection
     }
 
     {seq_match_choices, optional_selections}

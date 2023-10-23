@@ -6,13 +6,7 @@ defmodule JsPing do
     ~H"""
       <div id="js_ping.ex">
         <script>
-          <%!-- function startGame() {
-            const form = document.forms[0];
-            // Get the form's radio buttons
-            const how_fast = form.elements["how-fast"];
-            console.warn(how_fast);
-            window.live_hooks.pushEvent("start-game", { x: 12 });
-          } --%>
+
 
           function livePingTime() {
             window.live_hooks = this;
@@ -33,11 +27,8 @@ defmodule JsPing do
             const path_parts = path_name.split('/');
             const game_name = path_parts[1];
             const user_name = path_parts[2];
-             // console.warn("A", window.navigator.maxTouchPoints)
-             // console.warn("B", 'ontouchstart' in document)
             if (window.navigator.maxTouchPoints || 'ontouchstart' in document) {
               isMobile = true;
-             // console.warn("IS MOBILE")
             } else {
               isMobile = false;
             }

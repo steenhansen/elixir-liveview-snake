@@ -1,42 +1,19 @@
-defmodule RobotSnake do
-  defstruct robot_directions: ["down", "down", "down"],
-            robot_number: 1,
-            snake_front: {-1, -1},
-            snake_rump: {7, 11},
-            snake_xys_list: [],
-            snake_dead: false
-end
-
-defmodule RobotChange do
-  defstruct change_front: {1, 2},
-            change_rump: {3, 4},
-            change_id: "1",
-            change_dead: false,
-             change_jump: 0,
-            change_leap: Map.new()
-end
-
-defmodule RobotStart do
-  defstruct start_directions: ["down", "down", "down"],
-            start_number: 12,
-            start_x: 5,
-            start_y: 5
-end
-
-defmodule RobotRoutes do
-  def left_10, do: "LLLLLLLLLLLLLLLLLLLLLLLL"
-
-  def clockwise_10, do: "DRDRRDRDDLDLLDLLULLULUURURRURURR"
-
-  def the_l, do: "DDDLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL"
-
-  def going_left_routes, do: [the_l(), left_10()]
-end
-
 defmodule RobotPlayer do
   @behaviour SnakePlayer
 
   use GenServer
+  def snakeId(pid) do
+    GenServer.call(pid, {:snakeId})
+  end
+
+
+
+  
+  def snakeDead(pid) do
+    GenServer.call(pid, {:snakeDead})
+  end
+
+
 
   defp urdl_to_long(single_urdl) do
     case single_urdl do
@@ -45,6 +22,10 @@ defmodule RobotPlayer do
       "D" -> "down"
       "L" -> "left"
     end
+  end
+
+    def winnerHead(pid_snake) do
+    GenServer.call(pid_snake, {:winnerHead})
   end
 
   def start_link(start, snake_length) do
@@ -66,17 +47,13 @@ defmodule RobotPlayer do
     {:ok, robot_snake}
   end
 
-  def snakeId(pid) do
-    GenServer.call(pid, {:snakeId})
-  end
-
-
 
   #
 
   def moveSnake2(robot_snake, pid_board) do
     snake_id = Integer.to_string(robot_snake.robot_number)
     head_direction = Enum.at(robot_snake.robot_directions, 0)
+
     if robot_snake.snake_dead do
       robot_snake
     else
@@ -91,7 +68,9 @@ defmodule RobotPlayer do
           "down" -> PlayerSnake.moveDown(x_front, y_front, board_height)
           "left" -> PlayerSnake.moveLeft(x_front, y_front, board_width)
         end
+
       new_snake_xys_list = new_body ++ [new_front]
+
       the_moved_snake = %{
         robot_snake
         | snake_front: new_front,
@@ -101,11 +80,13 @@ defmodule RobotPlayer do
 
       robot_change = %RobotChange{
         change_front: new_front,
-        change_id: snake_id,
+        change_pid_user: snake_id,
         change_rump: new_rump,
         change_dead: false
       }
+
       ran_into = GameBoard.snake2Board(pid_board, robot_change)
+
       if ran_into == "no_crash" do
         _moved_snake = %{
           the_moved_snake
@@ -120,31 +101,32 @@ defmodule RobotPlayer do
     end
   end
 
-
-  def jumpSnake(pid_snake, pid_board) do
-    GenServer.call(pid_snake, {:jumpSnake, pid_board})
+  def jumpSnake(pid_snake, pid_board, chosen_movement) do
+    GenServer.call(pid_snake, {:jumpSnake, pid_board,chosen_movement})
   end
 
 
-  def winnerHead(pid_snake) do
-    GenServer.call(pid_snake, {:winnerHead})
+
+  def handle_call({:snakeDead}, _, snake) do
+    snake_dead = snake.snake_dead
+    {:reply, snake_dead, snake}
   end
-  def handle_call({:snakeId}, _, snake) do
-    robot_number = snake.robot_number
-    snake_id = Integer.to_string(robot_number)
-    {:reply, snake_id, snake}
-  end
+
+
   def handle_call({:winnerHead}, _from, robot_snake) do
     if robot_snake.snake_dead do
       {:reply, false, robot_snake}
     else
-      {:reply, robot_snake.snake_front, robot_snake}
+      number_string = Integer.to_string(robot_snake.robot_number)
+      winner_name = "Computer " <> number_string
+      winner_front = robot_snake.snake_front
+      snake_front_and_name = [winner_front, winner_name]
+
+      {:reply, snake_front_and_name, robot_snake}
     end
   end
 
-
-
-  def handle_call({:jumpSnake, pid_board}, _from, robot_snake) do
+  def handle_call({:jumpSnake, pid_board, chosen_movement}, _from, robot_snake) do
     [head_direction | smaller_directions] = robot_snake.robot_directions
     moved_snake = moveSnake2(robot_snake, pid_board)
 
@@ -154,10 +136,10 @@ defmodule RobotPlayer do
       if length(smaller_directions) == 0 do
         new_route =
           case head_direction do
-            "up" -> RobotRoutes.going_left_routes()
-            "right" -> RobotRoutes.going_left_routes()
-            "down" -> RobotRoutes.going_left_routes()
-            "left" -> RobotRoutes.going_left_routes()
+            "up" -> RobotRoutes.going_up_routes(chosen_movement)
+            "right" -> RobotRoutes.going_right_routes(chosen_movement)
+            "down" -> RobotRoutes.going_down_routes(chosen_movement)
+            "left" -> RobotRoutes.going_left_routes(chosen_movement)
           end
 
         random_str = Enum.random(new_route)
@@ -185,5 +167,12 @@ defmodule RobotPlayer do
     end
   end
 
+    def handle_call({:snakeId}, _, snake) do
+    robot_number = snake.robot_number
+    snake_id = Integer.to_string(robot_number)
+    {:reply, snake_id, snake}
+  end
 
+
+  
 end

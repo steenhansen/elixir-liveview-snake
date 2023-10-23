@@ -4,7 +4,63 @@ defmodule JsOnload do
   def render(assigns) do
     ~H"""
       <script>
+
+        function getCssVarNumber(css_var_name){
+          d_c = document.documentElement
+          an_int = Number(getComputedStyle(d_c).getPropertyValue(css_var_name));
+          return an_int;
+        }
+
+        function setCssVar(css_var_name, var_value){
+          d_c = document.documentElement
+          d_c.style.setProperty(css_var_name, var_value);
+        }
+
+        function tryJump(){
+          ok_jump_time =getCssVarNumber("--jump-var-can-jump-milli")
+          cur_time = Date.now();
+          if (cur_time > ok_jump_time) {
+            jump_wait = jumpWaitTime() 
+            jump_opacity = opacityJumpWait()
+            next_time = cur_time + jump_wait;
+            setCssVar("--jump-var-can-jump-milli", next_time)
+            jump_man = document.getElementById("jump-man")
+            jump_man.style.opacity = jump_opacity
+            window.live_hooks.pushEvent("key-jump"); 
+          }
+        }
+
+        function opacityJumpWait() {
+          return 0.2
+        }
+
+        function jumpWaitTime(){
+          return 3000;
+        }         
+
+        function opacityJumpOk() {
+          return 1
+        }
+        
+        function waitHalfSecond(){
+          return 500
+        }
+
+        function neswHoverColor(){
+          return "#000102"
+        } 
+
+        function fixJump(){
+          ok_jump_time =getCssVarNumber("--jump-var-can-jump-milli")
+          cur_time = Date.now();
+          jump_man = document.getElementById("jump-man")
+          if (jump_man !== null && cur_time > ok_jump_time) {
+            jump_man.style.opacity = opacityJumpOk()
+          }
+        }
+
         window.onload = function (){
+          setInterval(function () {fixJump()}, waitHalfSecond());
           eventHandler = function (e){
             phoenix_hooks = window.live_hooks;
             key_code = e.keyCode;
@@ -21,22 +77,21 @@ defmodule JsOnload do
               e.preventDefault();                   
               phoenix_hooks.pushEvent("key-south");
             } else if (key_code == 32 ) { 
-              e.preventDefault();                   
-              phoenix_hooks.pushEvent("key-jump");
+              e.preventDefault();          
+              tryJump()   
               }
           }
 
           window.addEventListener('keydown', eventHandler, false);
         }
 
-        
-        function flash(target) {
+        <%!-- function flash(target) {
           target.style.backgroundColor = "rgba(var(--the-player-colors), .1)";
-        } 
+        }  --%>
 
         function enterNesw(bid) {
           button = document.getElementById(bid);
-          button.style.backgroundColor = "#000102";
+          button.style.backgroundColor = neswHoverColor();
         }
 
         function leaveNesw(bid) {

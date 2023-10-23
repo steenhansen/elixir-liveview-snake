@@ -1,7 +1,5 @@
 #  https://stackoverflow.com/questions/48378248/convert-list-of-maps-into-one-single-map
 
-# https://stackoverflow.com/questions/39383209/pattern-matching-on-a-map-with-variable-as-key
-#   %{"brother-game" => %{}}  =====>>>>> [ "brother-game", %{} ]
 defmodule MapMerger do
   def merge(list_of_maps) do
     do_merge(list_of_maps, %{})
@@ -29,14 +27,12 @@ end
 defmodule CollectParticipants do
   use GenServer
 
-  # alias MultiGameWeb.UserHtml
-
-  #  https://www.openmymind.net/Elixir-A-Little-Beyond-The-Basics-Part-8-genservers/
-
-  #  https://stackoverflow.com/questions/48876826/using-a-genserver-in-phoenix-the-process-is-not-alive
+  def clear_participants() do
+    GenServer.cast(__MODULE__, {:clear_participants})
+  end
 
   def start_link(_) do
-    dbg({" The start of the GAME "})
+    # db g({" The start of the GAME "})
     GenServer.start_link(__MODULE__, 0, name: __MODULE__)
   end
 
@@ -46,37 +42,22 @@ defmodule CollectParticipants do
   end
 
   defp removeDead(all_browsers) do
-
     alive_list =
       for a_game_with_users <- all_browsers do
-        {game_name, user_pids} = a_game_with_users
+        {game_name, user_pid_to_name} = a_game_with_users
 
-        the_users =
-          for {user_name, pid} <- user_pids,
-              Process.alive?(pid),
+        alive_user_pids =
+          for {pid_user, person_name} <- user_pid_to_name,
+              Process.alive?(pid_user),
               into: %{} do
-            {user_name, pid}
+            {pid_user, person_name}
           end
 
-        %{game_name => the_users}
+        %{game_name => alive_user_pids}
       end
 
-    MapMerger.merge(alive_list)
-  end
-
-  def handle_call({:get_participants, name_of_game}, _from_, all_browsers) do
-    alive_map = removeDead(all_browsers)
-    players_in_game = alive_map[name_of_game]
-
-    browser_alive =
-      Map.filter(
-        players_in_game,
-        fn {_user_name, pid_user} ->
-          Process.alive?(pid_user)
-        end
-      )
-
-    {:reply, browser_alive, alive_map}
+    still_alive = MapMerger.merge(alive_list)
+    still_alive
   end
 
   def get_participants(game_name) do
@@ -91,7 +72,7 @@ defmodule CollectParticipants do
   def handle_cast({:add_participant, game_name, user_name, new_pid_user}, old_waiting) do
     ensure_game = Map.put_new(old_waiting, game_name, %{})
     games_users = ensure_game[game_name]
-    added_user = Map.put(games_users, user_name, new_pid_user)
+    added_user = Map.put(games_users, new_pid_user, user_name)
     new_waiting = Map.put(old_waiting, game_name, added_user)
     {:noreply, new_waiting}
   end
@@ -100,7 +81,28 @@ defmodule CollectParticipants do
     GenServer.cast(__MODULE__, {:add_participant, game_name, user_name, pid_user})
   end
 
-  def clear_participants() do
-    GenServer.cast(__MODULE__, {:clear_participants})
+  def handle_call({:get_participants, name_of_game}, _from_, all_browsers) do
+    alive_map = removeDead(all_browsers)
+    players_in_game = alive_map[name_of_game]
+
+    if players_in_game == nil do
+      {:reply, %{}, alive_map}
+    else
+      number_users = Enum.count(players_in_game)
+
+      if number_users == 0 do
+        {:reply, %{}, alive_map}
+      else
+        browser_alive =
+          Map.filter(
+            players_in_game,
+            fn {pid_user, _user_name} ->
+              Process.alive?(pid_user)
+            end
+          )
+
+        {:reply, browser_alive, alive_map}
+      end
+    end
   end
 end

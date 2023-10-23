@@ -1,27 +1,3 @@
-defmodule StartBoard do
-  defstruct board_width: 2,
-   board_height: 3, 
-   board_walls: []
-end
-
-#  we need a type for "no_crash" , "hit_wall", "hit_snake"
-
-  defmodule ServerBoard do
-    use Norm
-
-    defstruct board_width: 44,
-              board_height: 44,
-              board_empty_xys: MapSet.new([{0, 0}, {0, 1}, {1, 0}, {1, 1}]),
-              board_fronts: %{"1" => MapSet.new([]), "jill" => {0, 0}, "bob" => {3, 3}},
-              board_rumps: %{"1" => MapSet.new([]), "jill" => {0, 0}, "bob" => {3, 3}},
-              board_walls: MapSet.new([{1, 1}, {2, 1}]),
-              board_colors: %{"1" => 3, "jill" => 1, "bob" => 2},
-              board_snakes_xys: %{{0, 0} => 10, {1, 0} => 11, {2, 0} => 12},
-              board_ids: %{1 => "bob"},
-              board_deads: %{"jill" => "bob"},
-              board_jumps: %{"b3" => %{{0, 0} => 10, {1, 0} => 11, {2, 0} => 12}},
-              board_leaps: Map.new()
-  end
 
 defmodule TakeTurn do
   def snake_crashed(hit_other_snake, prev_board, snake_id) do
@@ -62,7 +38,7 @@ defmodule TakeTurn do
     prev_empty = prev_board.board_empty_xys
 
     snake_front = snake_change.change_front
-    snake_id = snake_change.change_id
+    snake_id = snake_change.change_pid_user
     snake_rump = snake_change.change_rump
     snake_dead = snake_change.change_dead
     human_jump = snake_change.change_jump

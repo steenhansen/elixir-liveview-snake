@@ -78,11 +78,6 @@ defmodule MatrixGrid do
           y <- 0..board_height,
           into: MapSet.new(),
           do: {x, y}   
-# dbg("barddddddddddddddddddddddddddd")
-# nc = Norm.conform!(123, spec(is_integer() and &(&1 > 0)))
-# dbg(user_schema)
-# nc2 = Norm.conform!(all_empty, coll_of( spec(Map.is_map)))
-# dbg(nc2)
     all_empty
   end
 

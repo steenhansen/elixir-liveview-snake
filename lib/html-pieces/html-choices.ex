@@ -10,9 +10,10 @@ defmodule HtmlChoices do
   def render(assigns) do
     ~H"""
       <div>
-      <.form for={} phx-change="validate">
-           Game Speed
-              &nbsp;&nbsp;&nbsp;&nbsp;
+        <.form for={} phx-change="validate">
+          <div style="width:150px" >
+            <span style="float:right"> Game Speed :&nbsp;</span>
+          </div>
           <label for="fast-speed">Fast</label>
           <input name="select_speed[radio-speed]" type="radio" id="fast-speed" value="speed-fast" label="Fast"   checked={@select_speed == "speed-fast"} />
               &nbsp;&nbsp;&nbsp;&nbsp;
@@ -21,17 +22,13 @@ defmodule HtmlChoices do
               &nbsp;&nbsp;&nbsp;&nbsp;
           <label for="slow-speed">Slow</label>
           <input name="select_speed[radio-speed]" type="radio" id="slow-speed" value="speed-slow"  label="Slow"   checked={@select_speed == "speed-slow"}/>
-          <br><br><br>
-          Game Rotates
-              &nbsp;&nbsp;&nbsp;&nbsp;
-          <.input name="select_rotate" type="checkbox"  value={@select_rotate}   />
-           <br><br><br>
 
+          <br><br>
 
-
-                Playing Surface
-              &nbsp;&nbsp;&nbsp;&nbsp;
-        <label for="surface-large">Large</label>
+          <div style="width:150px" >
+            <span style="float:right">  Playing Surface :&nbsp;</span>
+          </div>
+          <label for="surface-large">Large</label>
           <input name="select_surface[radio-surface]" type="radio" id="surface-large" 
               value="surface-large" label="Fastx"   checked={@select_surface == "surface-large"} />
               &nbsp;&nbsp;&nbsp;&nbsp;
@@ -47,43 +44,105 @@ defmodule HtmlChoices do
           <input name="select_surface[radio-surface]" type="radio" id="surface-obstacles" 
                 value="surface-obstacles"  label="Mediumx"   checked={@select_surface == "surface-obstacles"}/>
 
+       
+          <br><br>
+         
+          <div style="width:150px" >
+            <span style="float:right">  Computer Players :&nbsp;</span>
+          </div>
+          <label for="computers-0">Zero</label>
+          <input name="select_computers[radio-computers]" type="radio" id="computers-0" 
+               value="computers-0"   checked={@select_computers == "computers-0"} /> &nbsp;
 
+          <%= if @user_max_robots >0 do %>
+            <label for="computers-1">One</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-1" 
+                   value="computers-1"   checked={@select_computers == "computers-1"} /> &nbsp;
+          <% end %>
 
-      <br><br><br>
-          Computer Players 
-              &nbsp;&nbsp;&nbsp;&nbsp;
-        <label for="computers-0">0</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-0" value="computers-0"   checked={@select_computers == "computers-0"} /> &nbsp;
-        <label for="computers-1">1</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-1" value="computers-1"   checked={@select_computers == "computers-1"} /> &nbsp;
-        <label for="computers-2">2</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-2" value="computers-2"   checked={@select_computers == "computers-2"} /> &nbsp;
-        <label for="computers-3">3</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-3" value="computers-3"   checked={@select_computers == "computers-3"} /> &nbsp;
-        <label for="computers-4">4</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-4" value="computers-4"   checked={@select_computers == "computers-4"} /> &nbsp;
-        <label for="computers-5">5</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-5" value="computers-5"   checked={@select_computers == "computers-5"} /> &nbsp;
-        <label for="computers-6">6</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-6" value="computers-6"   checked={@select_computers == "computers-6"} /> &nbsp;
-        <label for="computers-7">7</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-7" value="computers-7"   checked={@select_computers == "computers-7"} /> &nbsp;
-        <label for="computers-8">8</label>
-          <input name="select_computers[radio-computers]" type="radio" id="computers-8" value="computers-8"   checked={@select_computers == "computers-8"} />
-          
-         <br><br><br>
-          Snake Length 
-              &nbsp;&nbsp;&nbsp;&nbsp;
-        <label for="length-long">Long</label>
+          <%= if @user_max_robots >1 do %>
+            <label for="computers-2">Two</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-2"
+                  value="computers-2"   checked={@select_computers == "computers-2"} /> &nbsp;
+          <% end %>
+
+          <%= if @user_max_robots >2 do %>
+            <label for="computers-3">Three</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-3"
+                  value="computers-3"   checked={@select_computers == "computers-3"} /> &nbsp;
+          <% end %>
+
+          <%= if @user_max_robots >3 do %>
+            <label for="computers-4">Four</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-4"
+                  value="computers-4"   checked={@select_computers == "computers-4"} /> &nbsp;
+          <% end %>
+
+          <%= if @user_max_robots >4 do %>
+            <label for="computers-5">Five</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-5"
+                  value="computers-5"   checked={@select_computers == "computers-5"} /> &nbsp;
+          <% end %>
+
+          <%= if @user_max_robots >5 do %>
+            <label for="computers-6">Six</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-6"
+                  value="computers-6"   checked={@select_computers == "computers-6"} /> &nbsp;
+          <% end %>
+
+          <%= if @user_max_robots >6 do %>
+            <label for="computers-7">Seven</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-7"
+                  value="computers-7"   checked={@select_computers == "computers-7"} /> &nbsp;
+          <% end %>
+
+          <%= if @user_max_robots >7 do %>
+            <label for="computers-8">Eight</label>
+            <input name="select_computers[radio-computers]" type="radio" id="computers-8"
+                  value="computers-8"   checked={@select_computers == "computers-8"} />
+          <% end %>
+
+          <br><br>
+
+          <div style="width:150px" >
+            <span style="float:right">  Snake Length :&nbsp;</span>
+          </div>
+                  
+          <label for="length-long">Long</label>
           <input name="select_length[radio-length]" type="radio" id="length-long" value="length-long"   checked={@select_length == "length-long"} /> &nbsp;
-        <label for="length-medium">Medium</label>
+          <label for="length-medium">Medium</label>
           <input name="select_length[radio-length]" type="radio" id="length-medium" value="length-medium"   checked={@select_length == "length-medium"} /> &nbsp;
-        <label for="length-short">Short</label>
+          <label for="length-short">Short</label>
           <input name="select_length[radio-length]" type="radio" id="length-short" value="length-short"   checked={@select_length == "length-short"} /> &nbsp;
-          <br><br><br>
 
 
-      </.form>
+
+
+
+            <br><br>
+
+          <div style="width:150px" >
+            <span style="float:right">  Snake Movement :&nbsp;</span>
+          </div>
+                  
+          <label for="movement-simple">Simple</label>
+          <input name="select_movement[radio-movement]" type="radio" id="movement-simple" value="movement-simple"   checked={@select_movement == "movement-simple"} /> &nbsp;
+          <label for="movement-average">Average</label>
+          <input name="select_movement[radio-movement]" type="radio" id="movement-average" value="movement-average"   checked={@select_movement == "movement-average"} /> &nbsp;
+          <label for="movement-complex">Complex</label>
+          <input name="select_movement[radio-movement]" type="radio" id="movement-complex" value="movement-complex"   checked={@select_movement == "movement-complex"} /> &nbsp;
+
+
+
+          <br><br>
+    
+          <div style="width:150px;  float:left; margin-top:-6px" >
+            <span style="float:right">  Game Rotates :&nbsp;</span>
+          </div>
+          <.input name="select_rotate" type="checkbox"  value={@select_rotate} 
+           style="border-color:rgb(107, 114, 128)" />
+
+        </.form>
       </div>
     """
   end

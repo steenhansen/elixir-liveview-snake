@@ -11,8 +11,9 @@ defmodule CssVars do
         <style >
 
           :root {
+                  --user_constrol_opacity:  <%= @data_snake_dead %>;
             --rotator-change:  <%= @data_rotate %>;
-     --data_scale:  <%= @data_scale %>;
+          --data_scale:  <%= @data_scale %>;
           --data_offset_x:  <%= @data_offset_x %>;
           --data_offset_y:  <%= @data_offset_y %>;
             --the-player-colors:  <%= @data_colors %>;
@@ -26,9 +27,23 @@ defmodule CssVars do
             --jump_7_opacity: <%= @data_jump_opacity[7] %>;
             --jump_8_opacity: <%= @data_jump_opacity[8] %>;
             --jump_9_opacity: <%= @data_jump_opacity[9] %>;
+            --jump-var-can-jump-milli: -1;
+
+
           }
 
+       #nesw {
+        left:200px;
+        clear:both; 
+        visibility:hidden; 
+        position:relative;
+            opacity: var(--user_constrol_opacity);
+        }
 
+
+       #inside-jump {
+               opacity: var(--user_constrol_opacity);
+        }
 
         #zoom-board {
           left: var(--data_offset_x);

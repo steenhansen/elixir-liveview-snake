@@ -1,84 +1,24 @@
-#  FROM - https://elixirforum.com/t/how-to-make-proper-two-dimensional-data-structures-in-elixir/872/6
-
-defmodule GameSizes do
-  defstruct size_board_hor: 44,
-            size_board_ver: 44,
-            size_board_hor_px: 431,
-            size_board_ver_px: 431,
-            size_last_hor: 44 - 1,
-            size_last_ver: 44 - 1,
-            size_nw_hor: trunc(44 * 1 / 3),
-            size_nw_ver: trunc(44 * 1 / 3),
-            size_ne_hor: trunc(44 * 1 / 3),
-            size_ne_ver: trunc(44 * 2 / 3),
-            size_se_hor: trunc(44 * 2 / 3),
-            size_se_ver: trunc(44 * 2 / 3),
-            size_sw_hor: trunc(44 * 1 / 3),
-            size_sw_ver: trunc(44 * 2 / 3),
-            size_center_x: trunc(44 / 2),
-            size_center_y: trunc(44 / 2)
-end
-
-defmodule GameSequences do
-  defstruct pid_board: nil,
-            seq_humans: Map.new(),
-            seq_robots: Map.new(),
-            seq_max_ping: 0,
-            seq_finished: false,
-            seq_scale: 1,
-            seq_countdown: 3,
-            seq_winner_front: {0, 0},
-            seq_winner_name: "Bob",
-            seq_match_choices: %MatchChosens{
-              chosen_frames_per_sec: TheConsts.c_speed_fast_50_a_sec(),
-              chosen_rotate: false,
-              chosen_length: 8,
-              chosen_tile_width: 44,
-              chosen_tile_height: 44,
-              chosen_obstacles: [{40, 40}, {41, 41}, {42, 42}],
-              chosen_computers: 1
-            },
-            seq_game_sizes: %GameSizes{
-              size_board_hor: 44,
-              size_board_ver: 44,
-              size_board_hor_px: 391,
-              size_board_ver_px: 391,
-              size_last_hor: 44 - 1,
-              size_last_ver: 44 - 1,
-              size_nw_hor: trunc(44 * 1 / 3),
-              size_nw_ver: trunc(44 * 1 / 3),
-              size_ne_hor: trunc(44 * 1 / 3),
-              size_ne_ver: trunc(44 * 2 / 3),
-              size_se_hor: trunc(44 * 2 / 3),
-              size_se_ver: trunc(44 * 2 / 3),
-              size_sw_hor: trunc(44 * 1 / 3),
-              size_sw_ver: trunc(44 * 2 / 3),
-              size_center_x: trunc(44 / 2),
-              size_center_y: trunc(44 / 2)
-            }
-end
 
 defmodule TickMoment do
   use GenServer
 
-  def start_link({starter_person, seq_match_choices, seq_game_sizes, start_locations}) do
+  def start_link({starter_person, seq_match_choices, seq_game_sizes, start_locations,participants_live}) do
     GenServer.start_link(
       TickMoment,
-      {starter_person, seq_match_choices, seq_game_sizes, start_locations}
+      {starter_person, seq_match_choices, seq_game_sizes, start_locations,participants_live}
     )
   end
 
-  def init({game_name, seq_match_choices, seq_game_sizes, start_locations}) do
-    participants_live = CollectParticipants.get_participants(game_name)
-
+  def init({game_name, seq_match_choices, seq_game_sizes, start_locations,participants_live}) do
     size_board_hor = seq_game_sizes.size_board_hor
     size_board_ver = seq_game_sizes.size_board_ver
 
-    start_board = %StartBoard{
+    start_board = %ServerBoard{
       board_width: size_board_hor,
       board_height: size_board_ver,
       board_walls: seq_match_choices.chosen_obstacles
     }
+
 
     {:ok, pid_board} = GameBoard.start_link(start_board)
 
@@ -90,22 +30,23 @@ defmodule TickMoment do
 
     seq_humans =
       participants_live
-      |> Enum.with_index(1)
+      |> Enum.with_index(num_robots)  
       |> Enum.map(fn {pid_user__person_name, color_index} ->
-        {person_name, pid_user} = pid_user__person_name
+        {pid_user, person_name} = pid_user__person_name
         {x_start, y_start, dir_start} = start_locations[color_index]
+
 
         person_snake = %HumanStart{
           game_name: game_name,
           start_name: person_name,
           start_direction: dir_start,
           start_x: x_start,
-          start_y: y_start
+          start_y: y_start,
+         pid_user: pid_user
         }
-
         {:ok, pid_snake} = HumanPlayer.start_link(person_snake, snake_length)
-        GameBoard.place_player(pid_board, person_name)
-        {person_name, %{pid_snake: pid_snake, pid_user: pid_user}}
+        GameBoard.place_player(pid_board, pid_user)
+        { %{pid_user: pid_user}, %{pid_snake: pid_snake, person_name: person_name}}
       end)
       |> Map.new()
 
@@ -114,7 +55,8 @@ defmodule TickMoment do
       seq_humans: seq_humans,
       seq_robots: seq_robots,
       seq_max_ping: 0,
-      seq_finished: false,
+       seq_step: "play_seq_1",
+      seq_winner_countdown: 0,
       seq_scale: 1,
       seq_countdown: 3,
       seq_match_choices: seq_match_choices,
@@ -124,8 +66,8 @@ defmodule TickMoment do
     {:ok, started_moment}
   end
 
-  def snake_change_dir(tid, person_name, new_dirr) do
-    GenServer.cast(tid, {:snake_change_dir, person_name, new_dirr})
+  def snake_change_dir(tid, pid_user, new_dirr) do
+    GenServer.cast(tid, {:snake_change_dir, pid_user, new_dirr})
   end
 
   def robot_snakes(num_robots, pid_board, start_locations, snake_length) do
@@ -154,7 +96,9 @@ defmodule TickMoment do
 
   ############## 
   def handle_info({:update_tick}, tick_moment) do
-    started_moment = GameLoop.browser_message(self(), tick_moment)
+    pid_tick = self()
+
+    started_moment = GameLoop.browser_message(pid_tick, tick_moment)
     chosen_frames_per_sec = tick_moment.seq_match_choices.chosen_frames_per_sec
     Process.send_after(self(), {:update_tick}, chosen_frames_per_sec)
     {:noreply, started_moment}
@@ -177,8 +121,8 @@ defmodule TickMoment do
     GenServer.cast(pid_tick, {:begin_game})
   end
 
-  def jump_over(tid, person_name) do
-    GenServer.cast(tid, {:jump_over, person_name})
+  def jump_over(tid, pid_user) do
+    GenServer.cast(tid, {:jump_over, pid_user})
   end
 
   def handle_cast({:begin_game}, old_moment) do
@@ -198,15 +142,15 @@ defmodule TickMoment do
   end
 
   #####################
-  def handle_cast({:snake_change_dir, person_name, new_dirr}, started_moment) do
-    down_snake = Map.get(started_moment.seq_humans, person_name)
+  def handle_cast({:snake_change_dir, pid_user, new_dirr}, started_moment) do
+    down_snake = Map.get(started_moment.seq_humans, %{pid_user: pid_user})
     %{pid_snake: pid_snake} = down_snake
     HumanPlayer.change_direction(pid_snake, new_dirr)
     {:noreply, started_moment}
   end
 
-  def handle_cast({:jump_over, person_name}, started_moment) do
-    down_snake = Map.get(started_moment.seq_humans, person_name)
+  def handle_cast({:jump_over, pid_user}, started_moment) do
+        down_snake = Map.get(started_moment.seq_humans,  %{pid_user: pid_user})
     %{pid_snake: pid_snake} = down_snake
     HumanPlayer.jump_over(pid_snake)
     {:noreply, started_moment}
