@@ -3,31 +3,15 @@
 defmodule CssPlain do
   use MultiGameWeb, :live_component
 
-  # nesw-spacer    height:300px; sm
-  #                height:600px;   Large
 
-  # #live_user {
-  #   margin-top:63px;                84 L    62S
-  #    margin-left:62px               84L        62s
-  # }
-
-      #  #nesw {
-      #   left:200px;   200L    115S
 
   def render(assigns) do
     ~H"""
     <div>
 
       <style >
-         #nesw-spacer {
-        height:600px; 
-        visibility:hidden;
-        }
 
-        #live_user {
-          margin-top:84px; 
-           margin-left:84px;
-        }
+
 
 
 

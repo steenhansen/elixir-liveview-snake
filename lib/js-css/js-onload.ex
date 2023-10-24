@@ -4,6 +4,11 @@ defmodule JsOnload do
   def render(assigns) do
     ~H"""
       <script>
+        function getCssVar(css_var_name){
+          d_c = document.documentElement
+          a_var = getComputedStyle(d_c).getPropertyValue(css_var_name);
+          return a_var;
+        }
 
         function getCssVarNumber(css_var_name){
           d_c = document.documentElement
@@ -60,6 +65,14 @@ defmodule JsOnload do
         }
 
         window.onload = function (){
+          give_url_a_name =getCssVar("--give_url_a_name")
+          if (give_url_a_name=='true') {
+            const nameless_location = window.location.toString(); 
+            const last_char_slash = nameless_location.slice(-1) == "/"
+            const player_name = last_char_slash ? "Player-Name" : "/Player-Name"; 
+            const namefull_location = nameless_location + player_name; 
+            window.location.replace(namefull_location);
+          }
           setInterval(function () {fixJump()}, waitHalfSecond());
           eventHandler = function (e){
             phoenix_hooks = window.live_hooks;

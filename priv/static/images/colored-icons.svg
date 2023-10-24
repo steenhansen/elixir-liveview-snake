@@ -261,7 +261,7 @@
    <rect x="1100" y="100" width="100" height="100" fill="none" />
    <polygon points="1156,110      1199,199    1112,199" fill="#df8f00" />
 
-   <iew id="62" viewBox="1100 200 100 100" />
+   <view id="62" viewBox="1100 200 100 100" />
    <rect x="1100" y="200" width="100" height="100" fill="none" />
    <polygon points="1156,210      1199,299    1112,299" fill="#af6f00" />
 

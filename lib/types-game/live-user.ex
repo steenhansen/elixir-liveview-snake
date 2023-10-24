@@ -10,7 +10,8 @@ defmodule LiveUser do
             user_time_start: -43210,
             user_team: ["mounting"],
             user_max_robots: 0,
-            user_is_mobile: false
+            user_is_mobile: false,
+            user_nameless: false
 end
 
 

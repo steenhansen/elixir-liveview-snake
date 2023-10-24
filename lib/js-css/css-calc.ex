@@ -66,7 +66,7 @@ defmodule CssCalc do
           }
 
           #user-moniker {
-              margin-right:6px;
+              margin-left:6px;
             color: rgb(<%= @data_colors %>);
           }
 

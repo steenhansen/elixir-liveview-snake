@@ -28,7 +28,7 @@ defmodule TheConsts do
   # turns into 4
   def c_length_short, do: 3
 
-  def c_max_hor, do: 44
+
 
   # 8+1border TheConsts.c_tile_pixels
   def c_tile_visible, do: 8
@@ -62,11 +62,27 @@ defmodule TheConsts do
   def c_init_opacity_0,
     do: %{0 => 0, 1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0}
 
+      def c_max_hor, do: 44
  
-  def c_large_board, do: {44, 44}
+
+  def c_large_board, do: {c_max_hor(), c_max_hor()}
+ 
   def c_small_board, do: {22, 22}
   def c_rectangle_board, do: {12, 44}
-  def c_obstacle_board, do: {44, 44}
+  def c_obstacle_board, do: {c_max_hor(), c_max_hor()}
+
+  def c_large_left_offset, do: "230px"
+  def c_small_left_offset, do: "125px"
+  def c_rectangle_left_offset, do: "230px"
+  def c_obstacle_left_offset, do: "230px"
+
+  def c_large_top_offset, do: "500px"
+  def c_small_top_offset, do: "250px"
+  def c_rectangle_top_offset, do: "410px"
+  def c_obstacle_top_offset, do: "500px"
+
+  def c_matrix_rectangle_left, do: "240px"
+  def c_matrix_regular_left, do: "84px"
 
 #  def c_large_obstacles, do: [{21, 21}, {1, 1}, {42, 1}, {42, 42}, {1, 42}]
   def c_large_obstacles, do: [ 

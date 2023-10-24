@@ -1,6 +1,7 @@
 defmodule GameSizes do
   defstruct size_board_hor: 44,
             size_board_ver: 44,
+            size_board_left_indent: 84, # 240 for rectangle
             size_count_x_off: 17,
             size_count_y_off: 15,
             size_board_hor_px: 431,

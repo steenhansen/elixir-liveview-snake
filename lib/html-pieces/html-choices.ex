@@ -11,7 +11,7 @@ defmodule HtmlChoices do
     ~H"""
       <div>
         <.form for={} phx-change="validate">
-          <div style="width:150px" >
+          <div style="width:149px" >
             <span style="float:right"> Game Speed :&nbsp;</span>
           </div>
           <label for="fast-speed">Fast</label>
@@ -25,7 +25,7 @@ defmodule HtmlChoices do
 
           <br><br>
 
-          <div style="width:150px" >
+          <div style="width:149px" >
             <span style="float:right">  Playing Surface :&nbsp;</span>
           </div>
           <label for="surface-large">Large</label>
@@ -47,7 +47,7 @@ defmodule HtmlChoices do
        
           <br><br>
          
-          <div style="width:150px" >
+          <div style="width:149px" >
             <span style="float:right">  Computer Players :&nbsp;</span>
           </div>
           <label for="computers-0">Zero</label>
@@ -104,7 +104,7 @@ defmodule HtmlChoices do
 
           <br><br>
 
-          <div style="width:150px" >
+          <div style="width:149px" >
             <span style="float:right">  Snake Length :&nbsp;</span>
           </div>
                   
@@ -121,7 +121,7 @@ defmodule HtmlChoices do
 
             <br><br>
 
-          <div style="width:150px" >
+          <div style="width:149px" >
             <span style="float:right">  Snake Movement :&nbsp;</span>
           </div>
                   
@@ -136,7 +136,7 @@ defmodule HtmlChoices do
 
           <br><br>
     
-          <div style="width:150px;  float:left; margin-top:-6px" >
+          <div style="width:149px;  float:left; margin-top:-6px" >
             <span style="float:right">  Game Rotates :&nbsp;</span>
           </div>
           <.input name="select_rotate" type="checkbox"  value={@select_rotate} 

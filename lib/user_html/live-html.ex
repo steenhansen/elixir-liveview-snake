@@ -12,6 +12,7 @@ defmodule RenderBoard do
   end
 
   def renderCollect(assigns) do
+
     ~H"""
       <div style="margin-left:8px">
         <.live_component module={HtmlMobile} id="html-mobile"  user_is_mobile ={@live_user.user_is_mobile} />
@@ -24,7 +25,7 @@ defmodule RenderBoard do
         </div>
 
         <hr style="width:100%; height:18px">
-
+        <.live_component module={CssVarsCollect} id="css-vars-collect" user_nameless={@live_user.user_nameless} />
         <.live_component module={JsPing} id="js-ping"  user_time_start ={@live_user.user_time_start} />
         <.live_component module={CssPlain} id="css-plain" />
         <div>
@@ -50,22 +51,24 @@ defmodule RenderBoard do
 
   def renderPlay(assigns) do
     ~H"""
-      <div id="user-html" style="width: 360px">
+      <div id="user-html" style="widtXXh: 360px">
        <div id="user-moniker"  style= {"#{if @live_user.user_show_grid, do: 'visibility:visible', else: 'visibility:hidden'}"} > <%= @live_user.user_name %> </div>
         <div id='live_user' style= {"#{if @live_user.user_show_grid, do: 'visibility:visible', else: 'visibility:hidden'}"} >
           <.live_component module={JsPing} id="js-ping"  user_time_start ={@live_user.user_time_start} />
           <.live_component module={CssPlain} id="css-plain" />
-          <.live_component module={CssVars} id="css-vars"
+          <.live_component module={CssVarsPlay} id="css-vars-play"
           data_snake_dead={@html_data.data_snake_dead}
             data_rotate={@html_data.data_rotate}
             data_colors={@html_data.data_colors}
             data_jump_opacity={@html_data.data_jump_opacity}
             data_tile_px={@html_data.data_tile_px}
+            data_board_left={@html_data.data_board_left}
             data_rows={@html_data.data_rows} 
             data_w_px={@html_data.data_w_px}
             data_h_px={@html_data.data_h_px}
+             data_control_left={@html_data.data_control_left}
+             data_control_top={@html_data.data_control_top}
             data_scale={@html_data.data_scale}
-                       
             data_offset_x={@html_data.data_offset_x}
             data_offset_y={@html_data.data_offset_y} />
           <.live_component module={CssCalc} id="css-calc"
@@ -85,7 +88,7 @@ defmodule RenderBoard do
             data_jump_classes={@html_data.data_jump_classes} />
         </div>
         <div id="nesw-spacer" >&nbsp;</div>
-          <.live_component module={HtmlNESW} id="n-e-s-w"   />
+          <.live_component module={HtmlNESW} id="n-e-s-w"              />
           <div style="color:#DCDCDC; float:none; margin-top:60px; clear:both">max ping = <%= @seq_max_ping %></div>
         <.live_component module={JsOnload} id="js-onload"  />
       </div>

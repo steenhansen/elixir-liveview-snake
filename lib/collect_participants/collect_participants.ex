@@ -27,8 +27,8 @@ end
 defmodule CollectParticipants do
   use GenServer
 
-  def clear_participants() do
-    GenServer.cast(__MODULE__, {:clear_participants})
+  def clear_participants(game_name) do
+    GenServer.cast(__MODULE__, {:clear_participants, game_name})
   end
 
   def start_link(_) do
@@ -55,7 +55,6 @@ defmodule CollectParticipants do
 
         %{game_name => alive_user_pids}
       end
-
     still_alive = MapMerger.merge(alive_list)
     still_alive
   end
@@ -64,9 +63,9 @@ defmodule CollectParticipants do
     GenServer.call(__MODULE__, {:get_participants, game_name})
   end
 
-  def handle_cast({:clear_participants}, _old_waiting) do
-    no_players = Map.new()
-    {:noreply, no_players}
+  def handle_cast({:clear_participants, game_name}, old_collect) do
+    new_m = Map.delete(old_collect, game_name)
+    {:noreply, new_m}
   end
 
   def handle_cast({:add_participant, game_name, user_name, new_pid_user}, old_waiting) do

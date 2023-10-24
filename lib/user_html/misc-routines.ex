@@ -85,19 +85,18 @@ defmodule MiscRoutines do
       |> Map.new()
   end
 
-
-  def getDeadOpacity(is_snake_dead)do
+  def getDeadOpacity(is_snake_dead) do
     if is_snake_dead do
       0.3
     else
       1
     end
-
   end
 
   def drawBoard(
         {user_pid, pid_board, data_pid_tick, players_matrix, new_scale, scale_x_px, scale_y_px,
-         rotation_speed, seq_game_sizes, is_snake_dead, is_freezing}
+         rotation_speed, seq_game_sizes, is_snake_dead, is_freezing, chosen_control_offset,
+         chosen_top_control_offset}
       ) do
     max_hv_size = TheConsts.c_max_hor()
     players_data_rows_svg_inds = ListToXy.makeAllRows(players_matrix, max_hv_size, max_hv_size)
@@ -112,10 +111,10 @@ defmodule MiscRoutines do
       MiscRoutines.getIcons(players_data_rows_svg_inds, seq_game_sizes.size_board_hor)
 
     da_jumps = MiscRoutines.getJumps(players_data_rows_svg_inds)
-        control_opacity = MiscRoutines.getDeadOpacity(is_snake_dead)
+    control_opacity = MiscRoutines.getDeadOpacity(is_snake_dead)
 
+    data_zooming = if is_freezing, do: "hidden", else: "visible"
 
-      data_zooming = if is_freezing, do: "hidden", else: "visible"
     html_data = %HtmlData{
       pid_board: pid_board,
       data_snake_dead: control_opacity,
@@ -127,36 +126,33 @@ defmodule MiscRoutines do
       data_h_px: seq_game_sizes.size_board_ver_px,
       data_rot_w_px: seq_game_sizes.size_board_hor_px + 1,
       data_rot_h_px: seq_game_sizes.size_board_ver_px + 1,
+      data_board_left: seq_game_sizes.size_board_left_indent,
       data_scale: new_scale,
       data_offset_x: scale_x_px,
       data_offset_y: scale_y_px,
+      data_control_left: chosen_control_offset,
+      data_control_top: chosen_top_control_offset,
       data_rows_svg_inds: da_colors,
       data_rows_jump_inds: data_rows_jump_inds,
       data_jump_classes: da_jumps,
-
       data_jump_opacity: opacity_jump_2,
       data_zooming: data_zooming,
-      data_colors: user_rgb         # data_colors => data_rgb_color
+      # data_colors => data_rgb_color
+      data_colors: user_rgb
     }
 
     html_data
   end
 
-
-
-
   def get_maxRobots(game_name) do
+    current_players = CollectParticipants.get_participants(game_name)
+    current_players = Enum.map(current_players, fn {_pid_user, person_name} -> person_name end)
 
-        current_players = CollectParticipants.get_participants(game_name)
-     current_players = Enum.map(current_players, fn {_pid_user, person_name} -> person_name end)
-
-     amount_users = length(current_players)
-      amount_robots = 9 - amount_users
+    amount_users = length(current_players)
+    amount_robots = 9 - amount_users
 
     amount_robots
-end
-
-
+  end
 
   def render(assigns) do
     ~H"""

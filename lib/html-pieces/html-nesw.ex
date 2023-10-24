@@ -10,7 +10,7 @@ defmodule HtmlNESW do
   def render(assigns) do
     ~H"""
 
-     <div id="nesw" style="clear:both; visibility:hidden; position:relative" class="XXXXflex-grid" >
+     <div id="nesw">
                   <div id="nesw-zoom" >
     <div class=""  >
 

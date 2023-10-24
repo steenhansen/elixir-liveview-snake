@@ -1,6 +1,5 @@
 defmodule FormSelections do
   def userChoices(phx_validate) do
-
     %{
       "_target" => _target,
       "select_speed" => select_speed,
@@ -25,22 +24,15 @@ defmodule FormSelections do
         "speed-slow" -> TheConsts.c_speed_slow_12_5_a_sec()
       end
 
-
-
-
-
     %{"radio-movement" => movement_selection} = select_movement
 
-  #  movement_type = movement_selection
+    #  movement_type = movement_selection
     # movement_type = 
     #   case movement_selection do
     #     "movement-simple" -> TheConsts.c_length_long()
     #     "movement-average" -> TheConsts.c_length_medium()
     #     "movement-complex" -> TheConsts.c_length_short()
     #   end
-
-
-
 
     %{"radio-length" => length_selection} = select_length
 
@@ -51,19 +43,34 @@ defmodule FormSelections do
         "length-short" -> TheConsts.c_length_short()
       end
 
-
-
-
-
-
     %{"radio-surface" => surface_selection} = select_surface
 
     surface_x_y =
       case surface_selection do
-        "surface-large" -> TheConsts.c_large_board()    #{44, 44}           # SURFACE-LARGE
-        "surface-small" -> TheConsts.c_small_board()   #{22, 22}
-        "surface-rectangle" -> TheConsts.c_rectangle_board()       #{12, 44}
-        "surface-obstacles" -> TheConsts.c_obstacle_board() #       {44, 44}
+        # {44, 44}           # SURFACE-LARGE
+        "surface-large" -> TheConsts.c_large_board()
+        # {22, 22}
+        "surface-small" -> TheConsts.c_small_board()
+        # {12, 44}
+        "surface-rectangle" -> TheConsts.c_rectangle_board()
+        #       {44, 44}
+        "surface-obstacles" -> TheConsts.c_obstacle_board()
+      end
+
+    nesw_left_offset =
+      case surface_selection do
+        "surface-large" -> TheConsts.c_large_left_offset()
+        "surface-small" -> TheConsts.c_small_left_offset()
+        "surface-rectangle" -> TheConsts.c_rectangle_left_offset()
+        "surface-obstacles" -> TheConsts.c_obstacle_left_offset()
+      end
+
+    nesw_top_offset =
+      case surface_selection do
+        "surface-large" -> TheConsts.c_large_top_offset()
+        "surface-small" -> TheConsts.c_small_top_offset()
+        "surface-rectangle" -> TheConsts.c_rectangle_top_offset()
+        "surface-obstacles" -> TheConsts.c_obstacle_top_offset()
       end
 
     {tile_width, tile_height} = surface_x_y
@@ -73,7 +80,7 @@ defmodule FormSelections do
         "surface-large" -> [{}]
         "surface-small" -> [{}]
         "surface-rectangle" -> [{}]
-#        "surface-obstacles" -> [{21,21}, {1,1}, {42,1}, {42,42}, {1,42}]   # test here
+        #        "surface-obstacles" -> [{21,21}, {1,1}, {42,1}, {42,42}, {1,42}]   # test here
         "surface-obstacles" -> TheConsts.c_large_obstacles()
       end
 
@@ -97,6 +104,8 @@ defmodule FormSelections do
       chosen_rotate: choice_rotation,
       chosen_length: snake_length,
       chosen_tile_width: tile_width,
+      chosen_control_offset: nesw_left_offset,
+      chosen_top_control_offset: nesw_top_offset,
       chosen_tile_height: tile_height,
       chosen_obstacles: obstacle_x_y,
       chosen_computers: number_computers,
