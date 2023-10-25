@@ -19,21 +19,12 @@ defmodule FormSelections do
 
     frames_per_sec =
       case speed_selection do
-        "speed-fast" -> TheConsts.c_speed_fast_50_a_sec()
-        "speed-medium" -> TheConsts.c_speed_medium_25_a_sec()
-        "speed-slow" -> TheConsts.c_speed_slow_12_5_a_sec()
+        "speed-fast" -> TheConsts.c_speed_fast()
+        "speed-medium" -> TheConsts.c_speed_medium()
+        "speed-slow" -> TheConsts.c_speed_slow()
       end
 
     %{"radio-movement" => movement_selection} = select_movement
-
-    #  movement_type = movement_selection
-    # movement_type = 
-    #   case movement_selection do
-    #     "movement-simple" -> TheConsts.c_length_long()
-    #     "movement-average" -> TheConsts.c_length_medium()
-    #     "movement-complex" -> TheConsts.c_length_short()
-    #   end
-
     %{"radio-length" => length_selection} = select_length
 
     snake_length =
@@ -47,13 +38,9 @@ defmodule FormSelections do
 
     surface_x_y =
       case surface_selection do
-        # {44, 44}           # SURFACE-LARGE
         "surface-large" -> TheConsts.c_large_board()
-        # {22, 22}
         "surface-small" -> TheConsts.c_small_board()
-        # {12, 44}
         "surface-rectangle" -> TheConsts.c_rectangle_board()
-        #       {44, 44}
         "surface-obstacles" -> TheConsts.c_obstacle_board()
       end
 

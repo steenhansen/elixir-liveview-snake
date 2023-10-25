@@ -1,8 +1,48 @@
 <.flash_group flash={@flash} />
 
 
-<div>
-asdgfsdfgdsfg
+<div style="margin-left:4px">
+
+This is a multiplayer snake game written in Elixir, using Pheonix LiveView, and SVG.
+<br><br>
+
+Complete project on 
+ <.link navigate="https://github.com/steenhansen/elixir-liveview-snake"
+        class="underline hover:text-green-700"  >
+        GitHub</.link> that compiles on Windows with Elixir 1.15.2
+
+
+
+
+
+<br><br>
+To 
+
+      <.link navigate="/Snake-Game/Player-1"
+        class="underline hover:text-green-700"  >
+        play against the computer</.link> just click "START Snake-Game" in green on next screen.
+
+<br><br><br><br>
+Up to nine players can participate.
+<img src={~p"/images/make-game.png"} style="margin-left:16px" />
+
+<br><br>
+Game can also rotate to make it harder.
+<img src={~p"/images/diagonal-9.png"} />
+
+<br><br>
+Jumping is achieved with the space-bar, or clicking the jumping man icon.
+<img src={~p"/images/blue-jumps-red.png"} />
+
+<br><br>
+After a crash, a dead users segments are hollowed out.
+<img src={~p"/images/red-crashes.png"} />
+
+<br><br>
+The head of the winner's snake is zoomed in on, as is blue below, at the end of the game
+<img src={~p"/images/blue-wins.png"} width="500" height="600" />
+
+
 
 <style>
   :root {

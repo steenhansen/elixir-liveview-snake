@@ -20,7 +20,7 @@ defmodule RenderBoard do
           <.live_component module={HtmlPlayers} id="html-players"  user_team ={@live_user.user_team}  game_name ={@game_name} />
         </div>
         <div style="float:right; margin-top:16px; margin-bottom:16px;">
-          <.button phx-click="start-game"  style="background-color:blue"
+          <.button phx-click="start-game"  style="background-color:green"
                    phx-value-person-name= { @live_user.user_name } >START <%= @game_name %></.button>
         </div>
 

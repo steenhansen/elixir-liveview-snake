@@ -1,5 +1,5 @@
 defmodule MatchChosens do
-  defstruct chosen_frames_per_sec: TheConsts.c_speed_fast_50_a_sec(),
+  defstruct chosen_frames_per_sec: TheConsts.c_speed_fast(),
             chosen_rotate: 0,
             chosen_length: TheConsts.c_length_long(),
             chosen_tile_width: TheConsts.c_max_hor(),

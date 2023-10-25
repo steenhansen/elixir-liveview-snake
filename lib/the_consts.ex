@@ -13,11 +13,25 @@ defmodule TheConsts do
 
   def c_two_players, do: 2
 
-  def c_E_glacial, do: 10000
-  def c_D_slow_super, do: 1000
-  def c_speed_slow_12_5_a_sec, do: 80
-  def c_speed_medium_25_a_sec, do: 40
-  def c_speed_fast_50_a_sec, do: 20
+  def c_glacial_frames, do: 10000
+  def c_very_slow_frames, do: 1000
+
+  # 1000/160==6.25 frames a second
+  def c_6_25_frames_a_sec, do: 160
+  def c_12_5_frames_a_sec, do: 80
+  def c_25_frames_25_a_sec, do: 40
+
+  # too fast for heroku
+  def c_50_frames_a_sec, do: 20
+
+
+  def c_speed_slow, do: c_6_25_frames_a_sec()
+  def c_speed_medium, do: c_12_5_frames_a_sec()
+  def c_speed_fast, do: c_25_frames_25_a_sec()
+
+
+
+
 
   def c_count_down_second, do: 2000
 

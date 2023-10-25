@@ -9,7 +9,7 @@ defmodule HtmlMobile do
     ~H"""
       <div style="float:none">
         <%= if @user_is_mobile do %>
-          <b>Mobile is too slow for game.</b>
+          <p style="color:red">Mobile is too slow for game.</p>
           <br/>
           <br/>
           <br/>
