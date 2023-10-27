@@ -57,7 +57,7 @@ defmodule RobotPlayer do
     if robot_snake.snake_dead do
       robot_snake
     else
-      [board_width, board_height] = GameBoard.board_size(pid_board)
+      [board_width, board_height] = PlayingBoard.board_size(pid_board)
       [new_rump | new_body] = robot_snake.snake_xys_list
       {x_front, y_front} = robot_snake.snake_front
 
@@ -85,7 +85,7 @@ defmodule RobotPlayer do
         change_dead: false
       }
 
-      ran_into = GameBoard.snake2Board(pid_board, robot_change)
+      ran_into = PlayingBoard.snake2Board(pid_board, robot_change)
 
       if ran_into == "no_crash" do
         _moved_snake = %{

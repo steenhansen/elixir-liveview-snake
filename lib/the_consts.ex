@@ -1,8 +1,8 @@
 defmodule TheConsts do
   def c_max_players, do: 9
 
-  def c_freeze_wait, do: 1
-  def c_winner_wait, do: 20
+  def c_freeze_wait, do: 20
+  def c_winner_wait, do: 10 
 
   def c_from_plain_to_hor_jump, do: 5
   def c_from_plain_to_ver_jump, do: 7
@@ -107,7 +107,7 @@ defmodule TheConsts do
 
 
 
-  @doc since: """
+  @doc  """
        jump state 0 = x x x x x
 
        jump state 4 = s M x x x

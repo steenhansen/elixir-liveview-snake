@@ -3,7 +3,7 @@
 defmodule HtmlChoices do
   use MultiGameWeb, :live_component
 
-  @doc since: """
+  @doc """
                  
        """
 

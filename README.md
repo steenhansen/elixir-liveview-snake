@@ -49,33 +49,34 @@ Then load the dependencies and finally start it.
 
 <a name="fast-start"></a>
 
-### The program uses these GenServers to create games
-![](./priv/static/images/processes.png)
+### The program uses these processes to create multiple games from the single CollectParticipants server
+
+![](./assets/document-images/processes.png)
 
 -------------------------------
 
 ### Game options
-![](./priv/static/images/make-game.png)
+![](./assets/document-images/make-game.png)
 
 
 ### Can choose to have the game slowly rotate
-![](./priv/static/images/diagonal-9.png)
+![](./assets/document-images/diagonal-9.png)
 
 
 
 
 ### Jump with space-bar or click the jumping man icon
-![](./priv/static/images/blue-jumps-red.png)
+![](./assets/document-images/blue-jumps-red.png)
 
 
 
 
 
 ### After a crash, a dead users segments are hollowed out.
-![](./priv/static/images/red-crashes.png)
+![](./assets/document-images/red-crashes.png)
 
 ### The head of the winner's snake is zoomed in on, as is blue below, at the end of the game
-![](./priv/static/images/blue-wins.png)
+![](./assets/document-images/blue-wins.png)
 
 
 

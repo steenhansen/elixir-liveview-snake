@@ -2,7 +2,7 @@ defmodule MatrixGrid do
      use Norm
 
 
-  @doc since: """
+  @doc  """
          walled_matrix = %{{0, 0} => 0, {0, 1} => 0,          # NEW WAY 4  
                            {1, 0} => 0, {1, 1} => 1,
                            {2, 0} => 0, {2, 1} => 1 }
@@ -49,7 +49,7 @@ defmodule MatrixGrid do
     m_snaked_matrix
   end
 
-  @doc since: """
+  @doc  """
           board_width = 1               #NEW WAY 1 == NEW WAY 2 !!!!!!!!!
           board_height = 1 
           all_empty =
@@ -81,7 +81,7 @@ defmodule MatrixGrid do
     all_empty
   end
 
-  @doc since: """
+  @doc  """
          board_walls = MapSet.new([{1, 1}, {2,1}])                               # NEW WAY 3
          empty_matrix = MapSet.new([{0,0}, {1,0}, {2,0}, {3,0},
                            {0,1}, {1,1}, {2,1}, {3,1}      ])

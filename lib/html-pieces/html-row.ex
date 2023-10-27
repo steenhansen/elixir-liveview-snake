@@ -3,7 +3,7 @@
 defmodule HtmlRow do
   use MultiGameWeb, :live_component
 
-  @doc since: """
+  @doc  """
        jump_classes ----> hide_big_jump
            .hor-jump-1 { visibility: visible; scale: 1.35; }
         .hor-jump-2 { visibility: visible; scale: 1.9; }

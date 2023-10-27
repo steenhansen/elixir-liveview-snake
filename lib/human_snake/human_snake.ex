@@ -133,7 +133,7 @@ defmodule HumanPlayer do
     if human_snake.snake_dead do
       human_snake
     else
-      [board_width, board_height] = GameBoard.board_size(pid_board)
+      [board_width, board_height] = PlayingBoard.board_size(pid_board)
       [new_rump | new_body] = human_snake.snake_xys_list
       {x_front, y_front} = human_snake.snake_front
 
@@ -167,7 +167,7 @@ defmodule HumanPlayer do
       }
 
       ##############################
-      ran_into = GameBoard.snake2Board(pid_board, human_change)
+      ran_into = PlayingBoard.snake2Board(pid_board, human_change)
 
       if ran_into == "no_crash" do
         _moved_snake = %{
