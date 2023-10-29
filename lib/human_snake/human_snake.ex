@@ -81,7 +81,7 @@ defmodule HumanPlayer do
   end
 
   def handle_cast({:jump_over}, sliding_snake) do
-    start_jump = TheConsts.c_jump_states()
+    start_jump = TheConsts.jump_states()
     jumping_snake = %HumanSnake{sliding_snake | human_jump: start_jump}
     {:noreply, jumping_snake}
   end
@@ -103,7 +103,7 @@ defmodule HumanPlayer do
         true -> false
       end
 
-    slice_is_start = human_jump == TheConsts.c_jump_states()
+    slice_is_start = human_jump == TheConsts.jump_states()
     jump_slice = %JumpSlice{slice_vertical: slice_is_vertical, slice_start: slice_is_start}
     _new_leap = Map.put(old_leap, snake_front, jump_slice)
   end

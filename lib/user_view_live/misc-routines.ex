@@ -5,7 +5,7 @@ defmodule MiscRoutines do
        """
 
   def getColors(m_the_data_rows_svg_inds, size_board_hor) do
-    columns_current = TheConsts.c_max_hor() - 1
+    columns_current = TheConsts.max_hor() - 1
 
     _the_colors =
       m_the_data_rows_svg_inds
@@ -17,8 +17,8 @@ defmodule MiscRoutines do
             if(x > size_board_hor) do
               {x, 0}
             else
-              m_xySvgCss = the_columns[x]
-              svgCss_icon_ind = m_xySvgCss.svgCss_icon_ind
+              m_XySvg = the_columns[x]
+              svgCss_icon_ind = m_XySvg.svgCss_icon_ind
               {x, svgCss_icon_ind}
             end
           end)
@@ -31,7 +31,7 @@ defmodule MiscRoutines do
   end
 
   def getIcons(the_data_rows_svg_inds, size_board_hor) do
-    columns_current = TheConsts.c_max_hor() - 1
+    columns_current = TheConsts.max_hor() - 1
 
     _icons =
       the_data_rows_svg_inds
@@ -44,9 +44,9 @@ defmodule MiscRoutines do
               # out of viewing bounds, ie 22x22wide board
               {x_column, 0}
             else
-              m_xySvgCss = the_columns[x_column]
-              svgCss_css_jump = m_xySvgCss.svgCss_css_jump
-              svgCss_icon_ind = m_xySvgCss.svgCss_icon_ind
+              m_XySvg = the_columns[x_column]
+              svgCss_css_jump = m_XySvg.svgCss_css_jump
+              svgCss_icon_ind = m_XySvg.svgCss_icon_ind
 
               case svgCss_css_jump do
                 "no-jump" ->
@@ -75,8 +75,8 @@ defmodule MiscRoutines do
       m_the_data_rows_svg_inds
       |> Enum.map(fn {the_row, the_columns} ->
         the_columns
-        |> Enum.map(fn {x_column, m_xySvgCss} ->
-          svgCss_css_jump = m_xySvgCss.svgCss_css_jump
+        |> Enum.map(fn {x_column, m_XySvg} ->
+          svgCss_css_jump = m_XySvg.svgCss_css_jump
           {x_column, svgCss_css_jump}
         end)
         |> Map.new()
@@ -98,13 +98,13 @@ defmodule MiscRoutines do
          rotation_speed, seq_game_sizes, is_snake_dead, is_freezing, chosen_control_offset,
          chosen_top_control_offset}
       ) do
-    max_hv_size = TheConsts.c_max_hor()
+    max_hv_size = TheConsts.max_hor()
     players_data_rows_svg_inds = ListToXy.makeAllRows(players_matrix, max_hv_size, max_hv_size)
     the_colors = PlayingBoard.boardColors(pid_board)
     this_color = the_colors[user_pid]
 
-    opacity_jump_2 = Map.replace(TheConsts.c_init_opacity_0(), this_color - 1, 1)
-    user_rgb = TheConsts.c_convert_color_id_to_rgb()[this_color - 1]
+    opacity_jump_2 = Map.replace(TheConsts.init_opacity_0(), this_color - 1, 1)
+    user_rgb = TheConsts.convert_color_id_to_rgb()[this_color - 1]
     da_colors = MiscRoutines.getColors(players_data_rows_svg_inds, seq_game_sizes.size_board_hor)
 
     data_rows_jump_inds =
@@ -120,8 +120,8 @@ defmodule MiscRoutines do
       data_snake_dead: control_opacity,
       data_pid_tick: data_pid_tick,
       data_rotate: rotation_speed,
-      data_tile_px: TheConsts.c_tile_pixels(),
-      data_rows: TheConsts.c_tile_pixels(),
+      data_tile_px: TheConsts.tile_pixels(),
+      data_rows: TheConsts.tile_pixels(),
       data_w_px: seq_game_sizes.size_board_hor_px,
       data_h_px: seq_game_sizes.size_board_ver_px,
       data_rot_w_px: seq_game_sizes.size_board_hor_px + 1,

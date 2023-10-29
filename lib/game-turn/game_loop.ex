@@ -42,7 +42,7 @@ defmodule GameLoop do
 
     players_alive = PlayingBoard.players_alive(tick_moment.pid_board)
 
-    just_finished? = players_alive < TheConsts.c_two_players()
+    just_finished? = players_alive < TheConsts.two_players()
 
     if just_finished? && seq_step == "play_seq_1" do
       stopSeq_2(tick_moment, seq_humans, seq_robots)
@@ -155,8 +155,8 @@ defmodule GameLoop do
             | seq_winner_front: winner_front,
               seq_winner_name: winner_name,
               seq_step: "free_seq_3",
-              seq_winner_countdown: TheConsts.c_winner_wait(),
-              seq_freeze_countdown: TheConsts.c_freeze_wait()
+              seq_winner_countdown: TheConsts.winner_wait(),
+              seq_freeze_countdown: TheConsts.freeze_wait()
           }
 
         robot_win ->
@@ -167,8 +167,8 @@ defmodule GameLoop do
             | seq_winner_front: winner_front,
               seq_winner_name: winner_name,
               seq_step: "free_seq_3",
-              seq_winner_countdown: TheConsts.c_winner_wait(),
-              seq_freeze_countdown: TheConsts.c_freeze_wait()
+              seq_winner_countdown: TheConsts.winner_wait(),
+              seq_freeze_countdown: TheConsts.freeze_wait()
           }
 
         true ->
@@ -186,7 +186,7 @@ defmodule GameLoop do
     if countdown == 0 do
       _do_zoom_in = %GameSequences{
         tick_moment
-        | seq_winner_countdown: TheConsts.c_winner_wait(),
+        | seq_winner_countdown: TheConsts.winner_wait(),
           seq_step: "zoom_seq_4"
       }
     else
@@ -228,7 +228,7 @@ defmodule GameLoop do
     for {%{pid_user: pid_user}, %{pid_snake: _pid_snake, person_name: _person_name}} <-
           seq_humans,
         into: [] do
-      if old_scale > TheConsts.c_scaling_steps() do
+      if old_scale > TheConsts.scaling_steps() do
         UserViewLive.end_game(pid_user)
       else
         UserViewLive.send_winner(
@@ -293,15 +293,15 @@ defmodule GameLoop do
   def endScale(prev_scale, seq_winner_front) do
     {coord_x, coord_y} = seq_winner_front
 
-    offset_x_size = coord_x * TheConsts.c_tile_pixels()
-    offset_y_size = coord_y * TheConsts.c_tile_pixels()
+    offset_x_size = coord_x * TheConsts.tile_pixels()
+    offset_y_size = coord_y * TheConsts.tile_pixels()
 
     scale_offset_x = offset_x_size * prev_scale
     scale_x_px = float2Px(scale_offset_x)
     scale_offset_y = offset_y_size * prev_scale
     scale_y_px = float2Px(scale_offset_y)
 
-    if prev_scale > TheConsts.c_scaling_steps() do
+    if prev_scale > TheConsts.scaling_steps() do
       [prev_scale, scale_x_px, scale_y_px]
     else
       [prev_scale + 1, scale_x_px, scale_y_px]

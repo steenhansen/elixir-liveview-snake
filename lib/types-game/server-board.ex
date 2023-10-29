@@ -2,8 +2,8 @@
   defmodule ServerBoard do
     use Norm
 
-    defstruct board_width: 44,
-              board_height: 44,
+    defstruct board_width: 39,
+              board_height: 38,
               board_empty_xys: MapSet.new([{0, 0}, {0, 1}, {1, 0}, {1, 1}]),
               board_fronts: %{"1" => MapSet.new([]), "jill" => {0, 0}, "bob" => {3, 3}},
               board_rumps: %{"1" => MapSet.new([]), "jill" => {0, 0}, "bob" => {3, 3}},

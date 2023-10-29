@@ -78,7 +78,7 @@ defmodule GameTurn do
         for comp_number <- 1..num_robots, into: %{} do
           robot_index = comp_number - 1
           {x_start, y_start, dir_start} = start_locations[robot_index]
-          straight_start = List.duplicate(dir_start, TheConsts.c_start_follow())
+          straight_start = List.duplicate(dir_start, TheConsts.start_follow())
 
           comp_snake = %RobotStart{
             start_number: robot_index,
@@ -106,7 +106,7 @@ defmodule GameTurn do
 
   def handle_info({:do_countdown}, old_moment) do
     if old_moment.seq_countdown > 0 do
-      Process.send_after(self(), {:do_countdown}, TheConsts.c_count_down_second())
+      Process.send_after(self(), {:do_countdown}, TheConsts.count_down_second())
       started_moment = GameLoop.browser_countdown(self(), old_moment)
       {:noreply, started_moment}
     else
@@ -135,7 +135,7 @@ defmodule GameTurn do
     Process.send_after(
       self(),
       {:do_countdown},
-      TheConsts.c_count_down_second()
+      TheConsts.count_down_second()
     )
 
     {:noreply, old_moment}

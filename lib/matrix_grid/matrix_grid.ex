@@ -36,12 +36,12 @@ defmodule MatrixGrid do
       m_walled_matrix
       |> Enum.map(fn {xy_coord, color_0_1} ->
         if Map.has_key?(m_snakes_pixels, xy_coord) do
-          m_xySvgCss = m_snakes_pixels[xy_coord]
+          m_XySvg = m_snakes_pixels[xy_coord]
 
-            {xy_coord, m_xySvgCss}
+            {xy_coord, m_XySvg}
         else
-          m_xySvgCss = %XySvgCss{svgCss_icon_ind: color_0_1, svgCss_css_jump: "no-jump"}
-          {xy_coord, m_xySvgCss}
+          m_XySvg = %XySvg{svgCss_icon_ind: color_0_1, svgCss_css_jump: "no-jump"}
+          {xy_coord, m_XySvg}
         end
       end)
       |> Map.new()
@@ -61,7 +61,7 @@ defmodule MatrixGrid do
        """
          #@contract rgb_to_hex(r :: rgb(), g :: rgb(), b :: rgb()) :: hex()
 # all_empty = %{
-#   {38, 2} => %XySvgCss{svgCss_icon_ind: 0, svgCss_css_jump: "no-jump"}
+#   {38, 2} => %XySvg{svgCss_icon_ind: 0, svgCss_css_jump: "no-jump"}
 
   def emptyMatrix(board_width, board_height) do
 

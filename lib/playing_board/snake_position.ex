@@ -102,12 +102,12 @@ defmodule BoardSnakePosition do
 
   def possibleColors(player_color, snake_kill) do
     if snake_kill do
-      dead_svg = player_color * 10 + TheConsts.c_dead_svg_offset()
+      dead_svg = player_color * 10 + TheConsts.dead_svg_offset()
       {dead_svg, dead_svg, dead_svg}
     else
-      head_svg = player_color * 10 + TheConsts.c_head_svg_offset()
-      midl_svg = player_color * 10 + TheConsts.c_midl_svg_offset()
-      tail_svg = player_color * 10 + TheConsts.c_tail_svg_offset()
+      head_svg = player_color * 10 + TheConsts.head_svg_offset()
+      midl_svg = player_color * 10 + TheConsts.midl_svg_offset()
+      tail_svg = player_color * 10 + TheConsts.tail_svg_offset()
       {head_svg, midl_svg, tail_svg}
     end
   end
@@ -128,18 +128,18 @@ defmodule BoardSnakePosition do
       jump_slice = human_leap[snake_front]
 
       if jump_slice.slice_vertical do
-        %XySvgCss{svgCss_icon_ind: head_svg, svgCss_css_jump: TheConsts.c_ver_jump()}
+        %XySvg{svgCss_icon_ind: head_svg, svgCss_css_jump: TheConsts.ver_jump()}
       else
-        %XySvgCss{svgCss_icon_ind: head_svg, svgCss_css_jump: TheConsts.c_hor_jump()}
+        %XySvg{svgCss_icon_ind: head_svg, svgCss_css_jump: TheConsts.hor_jump()}
       end
     else
-      %XySvgCss{svgCss_icon_ind: head_svg, svgCss_css_jump: TheConsts.c_no_jump()}
+      %XySvg{svgCss_icon_ind: head_svg, svgCss_css_jump: TheConsts.no_jump()}
     end
   end
 
   def bodySvgCss(human_leap, midl_svg, middle_coord, boardSnake_killed) do
     if boardSnake_killed do
-      %XySvgCss{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.c_no_jump()}
+      %XySvg{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.no_jump()}
     else
       is_middle_jump = Map.has_key?(human_leap, middle_coord)
 
@@ -147,12 +147,12 @@ defmodule BoardSnakePosition do
         jump_slice = human_leap[middle_coord]
 
         if jump_slice.slice_vertical do
-          %XySvgCss{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.c_ver_jump()}
+          %XySvg{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.ver_jump()}
         else
-          %XySvgCss{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.c_hor_jump()}
+          %XySvg{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.hor_jump()}
         end
       else
-        %XySvgCss{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.c_no_jump()}
+        %XySvg{svgCss_icon_ind: midl_svg, svgCss_css_jump: TheConsts.no_jump()}
       end
     end
   end
@@ -169,7 +169,7 @@ defmodule BoardSnakePosition do
 
     {head_svg, midl_svg, tail_svg} = possibleColors(boardSnake_color, boardSnake_killed)
 
-    m_rump_svg_css = %XySvgCss{svgCss_icon_ind: tail_svg, svgCss_css_jump: TheConsts.c_no_jump()}
+    m_rump_svg_css = %XySvg{svgCss_icon_ind: tail_svg, svgCss_css_jump: TheConsts.no_jump()}
 
     m_xys_svg_css =
       boardSnake_xys

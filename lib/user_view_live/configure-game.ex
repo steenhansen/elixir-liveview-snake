@@ -2,10 +2,10 @@ defmodule ConfigureGame do
   def rectangle_indent(chosen_tile_width, chosen_tile_height) do
     width_by_height = {chosen_tile_width, chosen_tile_height}
 
-    if width_by_height == TheConsts.c_rectangle_board() do
-      TheConsts.c_matrix_rectangle_left()
+    if width_by_height == TheConsts.rectangle_board() do
+      TheConsts.matrix_rectangle_left()
     else
-      TheConsts.c_matrix_regular_left()
+      TheConsts.matrix_regular_left()
     end
   end
 
@@ -25,8 +25,8 @@ defmodule ConfigureGame do
     size_count_y_off = trunc((chosen_tile_height - 20) / 2)
 
     size_board_left_indent = rectangle_indent(chosen_tile_width, chosen_tile_height)
-    size_board_hor_px = chosen_tile_width * TheConsts.c_tile_pixels()
-    size_board_ver_px = chosen_tile_height * TheConsts.c_tile_pixels()
+    size_board_hor_px = chosen_tile_width * TheConsts.tile_pixels()
+    size_board_ver_px = chosen_tile_height * TheConsts.tile_pixels()
 
     size_last_hor = chosen_tile_width - 1
     size_last_ver = chosen_tile_height - 1

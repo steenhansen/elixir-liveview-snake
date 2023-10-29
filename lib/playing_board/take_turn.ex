@@ -15,7 +15,7 @@ defmodule TakeTurn do
 
   def hit_a_wall(prev_board, snake_id) do
     old_deads = prev_board.board_deads
-    c_wall_kill = TheConsts.c_wall_kill()
+    wall_kill = TheConsts.wall_kill()
     new_killed = Map.put(old_deads, snake_id, true)
 
     next_board = %ServerBoard{
@@ -23,7 +23,7 @@ defmodule TakeTurn do
       | :board_deads => new_killed
     }
 
-    {:reply, c_wall_kill, next_board}
+    {:reply, wall_kill, next_board}
   end
 
   # this is where the snake does its move

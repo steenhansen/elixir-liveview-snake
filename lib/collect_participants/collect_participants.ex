@@ -25,8 +25,33 @@ end
 # started from lib/multi_game/application.ex as a child process
 
 defmodule CollectParticipants do
-  use GenServer
+ use GenServer
+ #use GenServer
+ use Norm
 
+
+
+     def rgb(), do: spec(is_integer() and &(&1 in 0..255))
+
+   def hex(), do: spec(is_binary() and &String.starts_with?(&1, "#"))
+
+  @contract rgb_to_hex(r :: rgb(), g :: rgb(), b :: rgb()) :: hex()
+  def rgb_to_hex(r, g, b) do
+    "#" <> r <> g<>b
+#    dbg({r,g,b})
+    #"#aaff11"
+  end
+
+
+
+#  def n_non_empty_str(), do: spec(is_binary() and &(String.length(&1)>0))
+
+
+
+#  def n_non_empty_str(), do: spec(is_binary())
+
+#  @contract clear_participants(game_name :: n_non_empty_str())
+#  @doc "blua"
   def clear_participants(game_name) do
     GenServer.cast(__MODULE__, {:clear_participants, game_name})
   end
@@ -55,6 +80,7 @@ defmodule CollectParticipants do
 
         %{game_name => alive_user_pids}
       end
+
     still_alive = MapMerger.merge(alive_list)
     still_alive
   end

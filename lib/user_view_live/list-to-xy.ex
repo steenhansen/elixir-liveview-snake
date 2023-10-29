@@ -22,11 +22,11 @@ defmodule ListToXy do
       for x <- 0..columns_current, into: %{} do
         xy_in_game? = Map.has_key?(players_matrix, {x, the_row})
         if xy_in_game? do
-          m_xySvgCss = players_matrix[{x, the_row}]
-           {x, m_xySvgCss}
+          m_XySvg = players_matrix[{x, the_row}]
+           {x, m_XySvg}
         else
-          m_xySvgCss = %XySvgCss{  svgCss_icon_ind: 0 ,  svgCss_css_jump: TheConsts.c_no_jump() }
-          {x, m_xySvgCss}
+          m_XySvg = %XySvg{  svgCss_icon_ind: 0 ,  svgCss_css_jump: TheConsts.no_jump() }
+          {x, m_XySvg}
         end
       end
   end
