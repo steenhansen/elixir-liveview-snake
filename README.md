@@ -24,26 +24,6 @@ To run locally:
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 
--------------------------------
-
-Follow steps below to launch the debugging observer, from https://elixir-lang.org/getting-started/debugging.html#observer
-
-     > iex.bat -S mix phx.server
-
-
-Then load the dependencies and finally start it.
-
-              iex> Mix.ensure_application!(:wx) 
-              iex> Mix.ensure_application!(:runtime_tools)
-              iex> Mix.ensure_application!(:observer) 
-
-              iex> :observer.start()
-
-
-
-
--------------------------------
-
 
 
 
@@ -78,5 +58,28 @@ Then load the dependencies and finally start it.
 ### The head of the winner's snake is zoomed in on, as is blue below, at the end of the game
 ![](./assets/document-images/blue-wins.png)
 
+
+
+
+### Six browser players versus one computer player in red, counting down
+![](./assets/document-images/seven-snakes.png)
+
+
+### Six browser players versus one computer player in red, playing
+![](./assets/document-images/playing-seven.png)
+
+
+
+### Follow steps below to launch the debugging observer
+     > iex.bat -S mix phx.server
+
+
+Then load the dependencies and finally start it.
+
+              iex> Mix.ensure_application!(:wx) 
+              iex> Mix.ensure_application!(:runtime_tools)
+              iex> Mix.ensure_application!(:observer) 
+
+              iex> :observer.start()
 
 

@@ -1,6 +1,6 @@
 
   defmodule ServerBoard do
-    use Norm
+
 
     defstruct board_width: 39,
               board_height: 38,

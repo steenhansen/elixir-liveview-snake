@@ -1,6 +1,9 @@
 #  https://stackoverflow.com/questions/48378248/convert-list-of-maps-into-one-single-map
 
 defmodule MapMerger do
+  use Norm
+
+  @contract merge(list_of_maps :: S.is_a_list_games_to_pid_to_user()) :: S.is_a_void()
   def merge(list_of_maps) do
     do_merge(list_of_maps, %{})
   end
@@ -22,45 +25,20 @@ defmodule MapMerger do
   end
 end
 
-# started from lib/multi_game/application.ex as a child process
-
 defmodule CollectParticipants do
- use GenServer
- #use GenServer
- use Norm
+  use GenServer
+  use Norm
 
-
-
-     def rgb(), do: spec(is_integer() and &(&1 in 0..255))
-
-   def hex(), do: spec(is_binary() and &String.starts_with?(&1, "#"))
-
-  @contract rgb_to_hex(r :: rgb(), g :: rgb(), b :: rgb()) :: hex()
-  def rgb_to_hex(r, g, b) do
-    "#" <> r <> g<>b
-#    dbg({r,g,b})
-    #"#aaff11"
-  end
-
-
-
-#  def n_non_empty_str(), do: spec(is_binary() and &(String.length(&1)>0))
-
-
-
-#  def n_non_empty_str(), do: spec(is_binary())
-
-#  @contract clear_participants(game_name :: n_non_empty_str())
-#  @doc "blua"
+  @contract clear_participants(game_name :: S.is_a_non_empty_string()) :: S.is_a_void()
   def clear_participants(game_name) do
     GenServer.cast(__MODULE__, {:clear_participants, game_name})
   end
 
   def start_link(_) do
-    # db g({" The start of the GAME "})
     GenServer.start_link(__MODULE__, 0, name: __MODULE__)
   end
 
+  @contract init(_ :: S.is_a_void()) :: S.is_a_ok_map_pair()
   def init(_) do
     no_games = Map.new()
     {:ok, no_games}
@@ -106,7 +84,7 @@ defmodule CollectParticipants do
     GenServer.cast(__MODULE__, {:add_participant, game_name, user_name, pid_user})
   end
 
-  def handle_call({:get_participants, name_of_game}, _from_, all_browsers) do
+  def handle_call({:get_participants, name_of_game}, _from, all_browsers) do
     alive_map = removeDead(all_browsers)
     players_in_game = alive_map[name_of_game]
 

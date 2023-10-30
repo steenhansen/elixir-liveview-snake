@@ -39,7 +39,9 @@ defmodule S do
       raise ArgumentError, message: "not a tuple " <> bad_tuple
     else
       if tuple_size(xy_tuple) != 2 do
-        raise ArgumentError, message: "not 2 elements " <> bad_tuple
+        if tuple_size(xy_tuple) != 0 do
+          raise ArgumentError, message: "not 2 elements " <> bad_tuple
+        end
       else
         {x, y} = xy_tuple
 
@@ -100,20 +102,25 @@ defmodule S do
     end
   end
 
+  ########################################
   @doc """
-    S.isa_xy_to_SvgCss(%{ {38, 2} => %XySvg{svgCss_icon_ind: 0, svgCss_css_jump: "no-jump"}})
+    S.isa_xy_to_0_1(%{ {38, 2} => 0 })
 
-    S.isa_xy_to_SvgCss(13) === not a map
-    S.isa_xy_to_SvgCss(%{ {1, 26} => {0, 3} }) === not a struct {0, 3}
+    S.isa_xy_to_0_1(%{ {38, 2} => 15 }) === not 0 or 1
+    S.isa_xy_to_0_1(13) === not a map
+    S.isa_xy_to_0_1(%{ {1, 26} => "word" })  not 0 or 1
   """
-  def isa_xy_to_SvgCss(my_map) do
+  def isa_xy_to_0_1(my_map) do
     if !is_map(my_map) do
       raise ArgumentError, message: "not a map"
     else
       my_map
-      |> Enum.map(fn {xy_coord, xy_svg} ->
+      |> Enum.map(fn {xy_coord, wall_0_1} ->
         isa_xy_tuple(xy_coord)
-        isa_xySvg_struct(xy_svg)
+
+        if wall_0_1 != 0 and wall_0_1 != 1 do
+          raise ArgumentError, message: "not 0 or 1"
+        end
       end)
 
       true
@@ -158,9 +165,87 @@ defmodule S do
     end
   end
 
+  @doc """
+    S.isa_xy_to_SvgCss(%{ {38, 2} => %XySvg{svgCss_icon_ind: 0, svgCss_css_jump: "no-jump"}})
+
+    S.isa_xy_to_SvgCss(13) === not a map
+    S.isa_xy_to_SvgCss(%{ {1, 26} => {0, 3} }) === not a struct {0, 3}
+  """
+  def isa_xy_to_SvgCss(my_map) do
+    if !is_map(my_map) do
+      raise ArgumentError, message: "not a map"
+    else
+      my_map
+      |> Enum.map(fn {xy_coord, xy_svg} ->
+        isa_xy_tuple(xy_coord)
+        isa_xySvg_struct(xy_svg)
+      end)
+
+      true
+    end
+  end
+
+  @doc """
+    S.isa_list_games_to_pid_to_user([%{"brother-game" => %{self() => "XYZ", :c.pid(0,250,0) => "123"}}])
+  """
+  def isa_list_games_to_pid_to_user(map_of_games) do
+    if !is_list(map_of_games) do
+      raise ArgumentError, message: "not a list"
+    else
+      map_of_games
+      |> Enum.map(fn game_map ->
+        if !is_map(game_map) do
+          raise ArgumentError, message: "game_map not a map"
+        end
+
+        game_and_users_list = Map.to_list(game_map)
+        [{game_name, list_of_users}] = game_and_users_list
+
+        if !is_binary(game_name) do
+          raise ArgumentError, message: "game name not a string"
+        end
+
+        list_of_users
+        |> Enum.map(fn {player_pid, player_name} ->
+          if !is_pid(player_pid) do
+            raise ArgumentError, message: "player_pid is not a pid"
+          end
+
+          if !is_binary(player_name) do
+            raise ArgumentError, message: "player_name not a string"
+          end
+        end)
+      end)
+
+      true
+    end
+  end
+
+ @doc """
+    S.isa_xy_to_SvgCss(%{ {38, 2} => %XySvg{svgCss_icon_ind: 0, svgCss_css_jump: "no-jump"}})
+
+    S.isa_xy_to_SvgCss(13) === not a map
+    S.isa_xy_to_SvgCss(%{ {1, 26} => {0, 3} }) === not a struct {0, 3}
+  """
+  def isa_ok_map_pair(ok_empty_map) do
+    if !is_tuple(ok_empty_map) do
+      raise ArgumentError, message: "not a pair"
+    else
+        {:ok, no_games} = ok_empty_map
+        if !is_map(no_games) do
+          raise ArgumentError, message: "games list is a map"
+        end
+ 
+      true
+    end
+  end
+
+
   ####################### use below in @contracts
   def is_a_xy_to_SvgCss(), do: spec(fn my_map -> S.isa_xy_to_SvgCss(my_map) end)
   def is_a_xy_set(), do: spec(fn my_map -> S.isa_xy_set(my_map) end)
+
+  def is_a_xy_to_0_1(), do: spec(fn my_map -> S.isa_xy_to_0_1(my_map) end)
 
   def is_a_pid(), do: spec(is_pid())
 
@@ -169,4 +254,15 @@ defmodule S do
   def is_a_coord(), do: spec(is_integer() and (&(&1 in 0..44)))
 
   def is_a_color_int(), do: spec(is_integer() and (&(&1 in 1..9)))
+
+  def is_a_non_empty_string(), do: spec(is_binary() and (&(String.length(&1) > 0)))
+
+  def is_a_void(), do: spec(fn _ -> true end)
+
+  def is_a_list_games_to_pid_to_user(),
+    do: spec(fn my_map -> S.isa_list_games_to_pid_to_user(my_map) end)
+
+
+    def is_a_ok_map_pair(),
+    do: spec(fn my_map -> S.isa_ok_map_pair(my_map) end)
 end
