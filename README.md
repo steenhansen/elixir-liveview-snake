@@ -2,10 +2,12 @@
 
 
 
+<a name="fast-start"></a>
+<a name="s"></a>
 
 ## This is a multiplayer snake game written in Elixir, using Pheonix LiveView, and SVG.
 
-
+![](https://evening-eyrie-25210-f2edb2eac607.herokuapp.com/images/tall-elixir.webp)
 
 
 
@@ -26,9 +28,9 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 
 
-<a name="fast-start"></a>
-<a name="s"></a>
 ### The program uses these processes to create multiple games from the single CollectParticipants server
+
+
 
 ![](./assets/document-images/processes.png)
 
