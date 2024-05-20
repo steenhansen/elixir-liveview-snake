@@ -7,7 +7,7 @@
 
 ## This is a multiplayer snake game written in Elixir, using Pheonix LiveView, and SVG.
 
-![](https://evening-eyrie-25210-f2edb2eac607.herokuapp.com/images/tall-elixir.webp)
+[](https://evening-eyrie-25210-f2edb2eac607.herokuapp.com/images/tall-elixir.webp)
 
 
 
