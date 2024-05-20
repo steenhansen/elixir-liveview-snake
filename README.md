@@ -7,9 +7,7 @@
 
 ## This is a multiplayer snake game written in Elixir, using Pheonix LiveView, and SVG.
 
-[](https://evening-eyrie-25210-f2edb2eac607.herokuapp.com/images/tall-elixir.webp)
-
-
+<img src="https://evening-eyrie-25210-f2edb2eac607.herokuapp.com/images/tall-elixir.webp" alt="drawing" width="800"/>
 
 Play online [against one computer](https://evening-eyrie-25210-f2edb2eac607.herokuapp.com/Snake-Game/Player-1) player. Use arrow keys for direction, and the space-bar to jump. Note that heavy use of SVG makes playing on mobile choppy.
 
